@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,27 +11,32 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool jumpPressed = false;
 
     // > animation parameters
+    [HideInInspector] public bool isGrounded = true;
     [HideInInspector] public bool isRunning = false;
     [HideInInspector] public bool isJumping = false;
+    [HideInInspector] public bool isFalling = false;
+    [HideInInspector] public bool isLanding = false;
     [HideInInspector] public bool isCrouching = false;
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isHit = false;
 
     // > player velocity
-        // >> current velocity : max velocity 
-    [HideInInspector] public float velocityX = 0.0f; // [-1.0f <--> 1.0f] 
-    //[HideInInspector] public float velocityY = 0.0f; // [0.0f <--> 1.0f]
-        // <<
+    public float runSpeed = 12.5f;
+    public float jumpSpeed = 115.0f;
+
     [HideInInspector] public float maxVelocity = 7.5f;
-/*    [HideInInspector] public float maxVelocityX = 7.5f;d
-    [HideInInspector] public float minVelocityY = 7.5f;*/
+
+    [HideInInspector] public PlayerJump jumpPhase;
+    [HideInInspector] public PlayerRun runPhase;
+
+    // <
 
     // > player components
     GameObject player;
     SpriteRenderer p_Sprite;
     Animator p_Animator;
-    // >
 
+    // > 
 
     // Start is called before the first frame update
     void Start()
@@ -67,21 +73,39 @@ public class PlayerController : MonoBehaviour
         {
             jumpPressed = true;
             isJumping = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.Space))
-        {
-            jumpPressed = false;
-            isJumping = false;
+            jumpPhase = jumpPhase == PlayerJump.Grounded ? PlayerJump.Ascend : jumpPhase;
+
         }
 
-        if (Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.A))
+        if (isGrounded)
         {
-            isRunning = false;
+            p_Animator.SetBool("isGrounded", isGrounded);
         }
 
     }
 
-    public void Move(Rigidbody2D playerBody, Direction direction, float speed = 12.5f, float jumpHeight = 75.0f)
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.tag == "Ground" || collision.collider.tag == "Platform")
+        {
+            Debug.Log("Entered");
+            isGrounded = true;
+            jumpPhase = jumpPhase != PlayerJump.Grounded ? PlayerJump.Landing : jumpPhase;
+
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.tag == "Ground" || collision.collider.tag == "Platform")
+        {
+            Debug.Log("Exited");
+            isGrounded = false;
+        }
+
+    }
+
+    public void Move(Rigidbody2D playerBody, Direction direction)
     {
         switch (direction)
         {
@@ -95,10 +119,10 @@ public class PlayerController : MonoBehaviour
                 }
                 if (playerBody.velocity.x < maxVelocity)
                 {
-                    playerBody.velocity += new Vector2(speed * Time.deltaTime, 0);
+                    playerBody.velocity += new Vector2(runSpeed * Time.deltaTime, 0);
                 }
 
-                velocityX = 1.0f; // TEST
+                runPhase = PlayerRun.Right;
 
                 break;
             case Direction.Left:
@@ -108,20 +132,23 @@ public class PlayerController : MonoBehaviour
                 }
                 if (playerBody.velocity.x > -7.5f)
                 {
-                    playerBody.velocity -= new Vector2(speed * Time.deltaTime, 0);
+                    playerBody.velocity -= new Vector2(runSpeed * Time.deltaTime, 0);
                 }
 
-                velocityX = -1.0f; // TEST
+                runPhase = PlayerRun.Left;
 
                 break;
             case Direction.Up:
                 if (playerBody.velocity.y < maxVelocity)
                 {
-                    playerBody.velocity += new Vector2(0, jumpHeight * Time.deltaTime);
+                    playerBody.velocity += new Vector2(0, jumpSpeed * Time.deltaTime);
+                    jumpPhase = PlayerJump.Ascend;
                 }
                 else
                 {
-                    jumpPressed = false;
+                    jumpPhase = PlayerJump.MaxHeight;
+                    isJumping = false;
+                    isFalling = true;
                 }
                 break;
             case Direction.Down:
@@ -133,26 +160,83 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void Stop (Rigidbody2D playerBody, Movement movementType)
+    public void Stop (Rigidbody2D playerBody, Direction direction)
     {
-        if (movementType == Movement.Run)
+        if (direction == Direction.Left || direction == Direction.Right || direction == Direction.Idle)
         {
             playerBody.velocity = new Vector2(0, playerBody.velocity.y);
-            velocityX = 0.0f;
+            isRunning = false;
         }
-        else if (movementType == Movement.Jump)
+        else if (direction == Direction.Up)
         {
-            playerBody.velocity = new Vector2(playerBody.velocity.x, 0);
+            
+            if (jumpPhase == PlayerJump.Ascend)
+            {
+                isJumping = false;
+            }
+            else if (jumpPhase == PlayerJump.Landing)
+            {
+                isFalling = false;
+            }
+
+            if (jumpPhase != PlayerJump.MaxHeight)
+            {
+                playerBody.velocity = new Vector2(playerBody.velocity.x, 0);
+                isLanding = jumpPhase == PlayerJump.Landing;
+            }
+
+            jumpPhase = !isGrounded ? PlayerJump.Suspended : PlayerJump.Landing;
+
         }
     }
     public IEnumerator Animate (Movement movementType)
     {
+        switch (movementType) // **SET ALL BOOLS TO REF VAR?** \\
+        {
 
-        p_Animator.SetBool("isRunning", true);
-        yield return new WaitWhile(() => isRunning);
-        p_Animator.SetBool("isRunning", false);
+            case Movement.Run:
+                p_Animator.SetBool("isRunning", true);
+                yield return new WaitWhile(() => isRunning);
+                p_Animator.SetBool("isRunning", false);
+
+                break;
+
+            case Movement.Jump:
+
+                p_Animator.SetBool("isGrounded", isGrounded);
+                p_Animator.SetBool("isJumping", isJumping);
+                yield return new WaitWhile(() => isJumping);
+                p_Animator.SetBool("isGrounded", isGrounded);
+                p_Animator.SetBool("isJumping", isJumping);
+
+                break;
+
+            case Movement.Falling:
+
+                p_Animator.SetBool("isGrounded", isGrounded);
+                p_Animator.SetBool("isFalling", isFalling);
+                yield return new WaitWhile(() => isFalling);
+                p_Animator.SetBool("isGrounded", isGrounded);
+                p_Animator.SetBool("isFalling", isFalling);
+
+                break;
+
+            case Movement.Landing:
+
+                p_Animator.SetBool("isLanding", isLanding);
+                yield return new WaitForSeconds(0.350f);
+                isLanding = false;
+                p_Animator.SetBool("isLanding", isLanding);
+
+                jumpPressed = false;
+                jumpPhase = PlayerJump.Grounded;
+
+                break;
+
+            default:
+                break;
+        }
 
         yield return null;
     }
-
 }

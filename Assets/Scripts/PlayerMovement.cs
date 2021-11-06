@@ -26,9 +26,10 @@ public class PlayerMovement : MonoBehaviour
 
         if (player.rightPressed)
         {
-            if (player.velocityX < 0)
+            // if player is running to the left and right is pressed
+            if (player.runPhase == PlayerRun.Left)
             {
-                player.Stop(playerBody, Movement.Run);
+                player.Stop(playerBody, Direction.Right);
             }
 
             player.Move(playerBody, Direction.Right);
@@ -37,9 +38,10 @@ public class PlayerMovement : MonoBehaviour
         
         if (player.leftPressed)
         {
-            if (player.velocityX > 0)
+            // if player is running to the right and left is pressed
+            if (player.runPhase == PlayerRun.Right)
             {
-                player.Stop(playerBody, Movement.Run);
+                player.Stop(playerBody, Direction.Left);
             }
 
             player.Move(playerBody, Direction.Left);
@@ -48,12 +50,59 @@ public class PlayerMovement : MonoBehaviour
 
         if (!player.leftPressed && !player.rightPressed)
         {
-            player.Stop(playerBody, Movement.Run);
+            player.Stop(playerBody, Direction.Idle);
         }
 
         if (player.jumpPressed)
         {
-            player.Move(playerBody, Direction.Up);
+
+            switch (player.jumpPhase)
+            {
+                case PlayerJump.Ascend:
+                    player.Move(playerBody, Direction.Up);
+                    StartCoroutine(player.Animate(Movement.Jump));
+                    break;
+
+                case PlayerJump.Landing:
+                    player.Stop(playerBody, Direction.Up);
+                    StartCoroutine(player.Animate(Movement.Landing));
+                    break;
+
+                case PlayerJump.MaxHeight:
+                    player.Stop(playerBody, Direction.Up);
+                    StartCoroutine(player.Animate(Movement.Falling));
+                    break;
+
+                case PlayerJump.Suspended:
+                    break;
+
+                default:
+                    Debug.LogWarning("Case Not Found");
+                    break;
+            }
+            
+
+/*            if (player.velocityY < 1.0f && player.velocityY > -0.01)
+            {
+                if (player.velocityY == 0.25f)
+                {
+                    player.Stop(playerBody, Direction.Up);
+                    StartCoroutine(player.Animate(Movement.Landing));
+                }
+                else
+                {
+                    player.Move(playerBody, Direction.Up);
+                    StartCoroutine(player.Animate(Movement.Jump));
+                }
+
+
+            }
+            else if (player.velocityY == 1.0f)
+            {
+                player.Stop(playerBody, Direction.Up);
+                StartCoroutine(player.Animate(Movement.Falling));
+            }*/
+            
         }
 
     }
