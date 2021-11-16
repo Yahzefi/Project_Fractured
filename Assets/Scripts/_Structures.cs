@@ -5,6 +5,7 @@ public enum Movement
     Jump,
     Landing,
     Falling,
+    Attack
 }
 
 public enum Direction
@@ -19,7 +20,8 @@ public enum Direction
 public enum PlayerRun
 {
     Right,
-    Left
+    Left,
+    Idle
 }
 
 public enum PlayerJump
@@ -29,4 +31,11 @@ public enum PlayerJump
     MaxHeight,
     Landing,
     Suspended
+}
+
+public enum Script
+{
+    Intro,
+    InteractionWithNPC01,
+    InteractionWithNPC02
 }

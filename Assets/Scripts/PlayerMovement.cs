@@ -79,30 +79,18 @@ public class PlayerMovement : MonoBehaviour
                 default:
                     Debug.LogWarning("Case Not Found");
                     break;
-            }
-            
+            }  
+        }
 
-/*            if (player.velocityY < 1.0f && player.velocityY > -0.01)
+        if (player.mouseClickLeft && !player.isAttacking)
+        {
+            // stop player
+            if (player.runPhase != PlayerRun.Idle)
             {
-                if (player.velocityY == 0.25f)
-                {
-                    player.Stop(playerBody, Direction.Up);
-                    StartCoroutine(player.Animate(Movement.Landing));
-                }
-                else
-                {
-                    player.Move(playerBody, Direction.Up);
-                    StartCoroutine(player.Animate(Movement.Jump));
-                }
-
-
+                player.Stop(playerBody, player.runPhase == PlayerRun.Left ? Direction.Left : Direction.Right);
             }
-            else if (player.velocityY == 1.0f)
-            {
-                player.Stop(playerBody, Direction.Up);
-                StartCoroutine(player.Animate(Movement.Falling));
-            }*/
-            
+            // animate
+            StartCoroutine(player.Animate(Movement.Attack));
         }
 
     }

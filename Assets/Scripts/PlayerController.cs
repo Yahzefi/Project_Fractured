@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool rightPressed = false;
     [HideInInspector] public bool leftPressed = false;
     [HideInInspector] public bool jumpPressed = false;
+    [HideInInspector] public bool mouseClickLeft = false;
 
     // > animation parameters
     [HideInInspector] public bool isGrounded = true;
@@ -36,14 +37,16 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer p_Sprite;
     Animator p_Animator;
 
-    // > 
+    // <
+
 
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.Find("Player");
+        player = this.gameObject;
         p_Sprite = player.GetComponent<SpriteRenderer>();
         p_Animator = player.GetComponent<Animator>();
+
     }
 
     // Update is called once per frame
@@ -51,8 +54,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.D))
         {
-            rightPressed = true;
-            isRunning = true;
+            rightPressed = !CameraFollow.screenIsScrolling;
+            isRunning = !CameraFollow.screenIsScrolling;
         }
         else
         {
@@ -61,8 +64,8 @@ public class PlayerController : MonoBehaviour
         
         if (Input.GetKey(KeyCode.A))
         {
-            leftPressed = true;
-            isRunning = true;
+            leftPressed = !CameraFollow.screenIsScrolling;
+            isRunning = !CameraFollow.screenIsScrolling;
         }
         else
         {
@@ -77,6 +80,11 @@ public class PlayerController : MonoBehaviour
 
         }
 
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            mouseClickLeft = true;
+        }
+
         if (isGrounded)
         {
             p_Animator.SetBool("isGrounded", isGrounded);
@@ -86,27 +94,41 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.tag == "Ground" || collision.collider.tag == "Platform")
+        if (collision.otherCollider.name == "bottomCollider")
         {
-            Debug.Log("Entered");
-            isGrounded = true;
-            jumpPhase = jumpPhase != PlayerJump.Grounded ? PlayerJump.Landing : jumpPhase;
+            if (collision.collider.tag == "Ground" || collision.collider.tag == "Platform")
+            {
+                Debug.Log("Entered");
+                isGrounded = true;
+                jumpPhase = jumpPhase != PlayerJump.Grounded ? PlayerJump.Landing : jumpPhase;
 
+            }
         }
     }
 
+
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.tag == "Ground" || collision.collider.tag == "Platform")
+        if (collision.otherCollider.name == "bottomCollider")
         {
-            Debug.Log("Exited");
-            isGrounded = false;
+            if (collision.collider.tag == "Ground" || collision.collider.tag == "Platform")
+            {
+                Debug.Log("Exited");
+                isGrounded = false;
+            }
         }
 
     }
 
     public void Move(Rigidbody2D playerBody, Direction direction)
     {
+
+        if (isAttacking)
+        {
+            isRunning = false;
+            return;
+        }
+
         switch (direction)
         {
             case Direction.Right:
@@ -166,6 +188,7 @@ public class PlayerController : MonoBehaviour
         {
             playerBody.velocity = new Vector2(0, playerBody.velocity.y);
             isRunning = false;
+            runPhase = PlayerRun.Idle;
         }
         else if (direction == Direction.Up)
         {
@@ -230,6 +253,17 @@ public class PlayerController : MonoBehaviour
 
                 jumpPressed = false;
                 jumpPhase = PlayerJump.Grounded;
+
+                break;
+
+            case Movement.Attack:
+
+                mouseClickLeft = false;
+                isAttacking = true;
+                p_Animator.SetBool("isAttacking", isAttacking);
+                yield return new WaitForSeconds(0.517f);
+                isAttacking = false;
+                p_Animator.SetBool("isAttacking", isAttacking);
 
                 break;
 
