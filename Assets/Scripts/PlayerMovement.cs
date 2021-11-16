@@ -84,13 +84,13 @@ public class PlayerMovement : MonoBehaviour
 
         if (player.mouseClickLeft && !player.isAttacking)
         {
-            // stop player
             if (player.runPhase != PlayerRun.Idle)
             {
                 player.Stop(playerBody, player.runPhase == PlayerRun.Left ? Direction.Left : Direction.Right);
             }
-            // animate
+
             StartCoroutine(player.Animate(Movement.Attack));
+
         }
 
     }

@@ -5,11 +5,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    // > external scripts
+    DialogueManager dManager;
+    // <
+
     // > key input/press
     [HideInInspector] public bool rightPressed = false;
     [HideInInspector] public bool leftPressed = false;
     [HideInInspector] public bool jumpPressed = false;
     [HideInInspector] public bool mouseClickLeft = false;
+    // <
 
     // > animation parameters
     [HideInInspector] public bool isGrounded = true;
@@ -20,6 +25,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool isCrouching = false;
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isHit = false;
+    // <
 
     // > player velocity
     public float runSpeed = 12.5f;
@@ -29,14 +35,16 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector] public PlayerJump jumpPhase;
     [HideInInspector] public PlayerRun runPhase;
-
     // <
 
     // > player components
     GameObject player;
     SpriteRenderer p_Sprite;
     Animator p_Animator;
-
+    // >> hit collider
+    GameObject hitCollider;
+    Vector3 hitColliderPos;
+    // <<
     // <
 
 
@@ -46,12 +54,18 @@ public class PlayerController : MonoBehaviour
         player = this.gameObject;
         p_Sprite = player.GetComponent<SpriteRenderer>();
         p_Animator = player.GetComponent<Animator>();
+        dManager = GameObject.Find("DialogueManager").GetComponent<DialogueManager>();
 
+        hitCollider = GameObject.Find("hitCollider");
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (dManager != null && dManager.isTalking) return;
+
+        hitColliderPos = hitCollider.transform.localPosition;
+
         if (Input.GetKey(KeyCode.D))
         {
             rightPressed = !CameraFollow.screenIsScrolling;
@@ -138,6 +152,12 @@ public class PlayerController : MonoBehaviour
                 if (playerBody.velocity.x < 0.5f)
                 {
                     p_Sprite.flipX = false;
+
+                    if (hitColliderPos.x < 0)
+                    {
+                        hitColliderPos = new Vector3(hitColliderPos.x * -1, hitColliderPos.y, hitColliderPos.z);
+                        hitCollider.transform.localPosition = hitColliderPos;
+                    }
                 }
                 if (playerBody.velocity.x < maxVelocity)
                 {
@@ -151,6 +171,12 @@ public class PlayerController : MonoBehaviour
                 if (playerBody.velocity.x > -0.5f)
                 {
                     p_Sprite.flipX = true;
+
+                    if (hitColliderPos.x > 0)
+                    {
+                        hitColliderPos = new Vector3(hitColliderPos.x * -1, hitColliderPos.y, hitColliderPos.z);
+                        hitCollider.transform.localPosition = hitColliderPos;
+                    }
                 }
                 if (playerBody.velocity.x > -7.5f)
                 {
@@ -218,9 +244,9 @@ public class PlayerController : MonoBehaviour
         {
 
             case Movement.Run:
-                p_Animator.SetBool("isRunning", true);
+                p_Animator.SetBool("isRunning", isRunning);
                 yield return new WaitWhile(() => isRunning);
-                p_Animator.SetBool("isRunning", false);
+                p_Animator.SetBool("isRunning", isRunning);
 
                 break;
 

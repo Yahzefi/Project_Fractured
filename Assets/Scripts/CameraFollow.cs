@@ -12,7 +12,7 @@ public class CameraFollow : MonoBehaviour
     Vector3 cameraPos;
     Vector3 targetPos;
 
-    float scrollSpeed = 11.5f;
+    float scrollSpeed = 15.0f;
 
     public static bool screenIsScrolling = false;
 
