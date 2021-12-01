@@ -19,11 +19,12 @@ public class DialogueManager : MonoBehaviour
     Text dName_Right;
     Text dText;
 
-    Animator c_Animator;
-    Animator p_Animator;
-
     [HideInInspector] public bool isTalking = false;
+    [HideInInspector] public bool sceneIsPlaying = false;
     bool isFlashing = false;
+
+    string[] speakerList;
+    string[] messageList;
 
     // Start is called before the first frame update
     void Start()
@@ -57,10 +58,6 @@ public class DialogueManager : MonoBehaviour
         dText.text = dText != null ? "" : dText.text;
 
         canvas.SetActive(false);
-
-        c_Animator = Camera.main.gameObject.GetComponent<Animator>();
-        p_Animator = GameObject.Find("Player").GetComponent<Animator>();
-        c_Animator.enabled = false;
 
     }
 
@@ -108,32 +105,42 @@ public class DialogueManager : MonoBehaviour
 
     public IEnumerator initScript(Script scriptRef)
     {
+
+        sceneIsPlaying = true;
+
         switch (scriptRef)
         {
-            case Script.Intro_01:
-                yield return new WaitForSeconds(1.0f);
-                string[] speakerList = scripts.fetchSpeakers(Script.Intro_01);
-                string[] messageList = scripts.fetchMessages(Script.Intro_01);
+            case Script.Intro00_01:
 
-// > camera animations
-                //
+                speakerList = scripts.fetchSpeakers(Script.Intro00_01);
+                messageList = scripts.fetchMessages(Script.Intro00_01);
 
-                canvas.SetActive(true);
+                break;
 
-                for (int i = 0; i < messageList.Length; i++)
-                {
-                    StartCoroutine(TypeText(speakerList[i], messageList[i]));
-                    yield return new WaitWhile(() => isTalking);
+            case Script.Intro00_02:
 
-                }
-
-                canvas.SetActive(false);
+                speakerList = scripts.fetchSpeakers(Script.Intro00_02);
+                messageList = scripts.fetchMessages(Script.Intro00_02);
 
                 break;
 
             default:
                 break;
         }
+
+        canvas.SetActive(true);
+
+        for (int i = 0; i < messageList.Length; i++)
+        {
+            StartCoroutine(TypeText(speakerList[i], messageList[i]));
+            yield return new WaitWhile(() => isTalking);
+
+        }
+
+        canvas.SetActive(false);
+
+        sceneIsPlaying = false;
+
     }
 
     public IEnumerator TypeText (string speakerName, string message)

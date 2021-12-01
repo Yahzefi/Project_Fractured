@@ -49,8 +49,8 @@ public enum Cutscene
 //      DIALOGUE        \\
 public enum Script
 {
-    Intro_01,
-    Intro_02,
+    Intro00_01,
+    Intro00_02,
     InteractionWithNPC01,
     InteractionWithNPC02
 }
@@ -72,6 +72,8 @@ public enum Checkpoint
 //      UI      \\
 public enum HUD
 {
+    Start,
     PlayerHealth,
-    PlayerMagic
+    PlayerMagic,
+    SkillsUI
 }

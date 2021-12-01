@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     // > data
     Data playerData;
+    Skill[] playerSkills;
     public Skill Lunge;
     public Skill Quake;
     // <
@@ -69,6 +70,20 @@ public class PlayerController : MonoBehaviour
         hitCollider = GameObject.Find("hitCollider");
 
         playerData = DataManager.playerData;
+        playerSkills = playerData.skills;
+
+        foreach (Skill skill in playerData.skills)
+        {
+            if (skill.name == "Lunge")
+            {
+                Lunge = skill;
+            }
+            else if (skill.name == "Quake")
+            {
+                Quake = skill;
+            }
+
+        }
 
     }
 
@@ -121,27 +136,61 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-
-            foreach (Skill skill in playerData.skills)
+            if (Lunge.isAccessible)
             {
-                if (skill.name == "Lunge") Lunge = skill;
-                else return;
+                Lunge.isSelected = !Lunge.isSelected;
             }
 
-            lungeSelected = Lunge.isAccessible;
+            lungeSelected = Lunge.isSelected;
+
+            if (lungeSelected)
+            {
+                Quake.isSelected = false;
+                quakeSelected = false;
+                // skill 3
+                // skill 3
+                // skill 4
+                // skill 4
+            }
+
+            HUDManager.UpdateHUD(HUD.SkillsUI, 1);
+            playerSkills = new Skill[] { Lunge, Quake };
+            playerData = new Data(playerData.stats, playerSkills, playerData.cPoint);
+
+            // Debug.Log(playerData.skills[0].isSelected + "-- from controller");
+            Debug.Log(lungeSelected ? $"{Lunge.name} is selected" : $"{Lunge.name} is not selected");
+
+            DataManager.Save(playerData);
 
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-
-            foreach (Skill skill in playerData.skills)
+            
+            if (Quake.isAccessible)
             {
-                if (skill.name == "Quake") Quake = skill;
-                else return;
+                Quake.isSelected = !Quake.isSelected;
             }
 
-            quakeSelected = Quake.isAccessible;
+            quakeSelected = Quake.isSelected;
+
+            if (quakeSelected)
+            {
+                Lunge.isSelected = false;
+                lungeSelected = false;
+                // skill 3
+                // skill 3
+                // skill 4
+                // skill 4
+            }
+
+            HUDManager.UpdateHUD(HUD.SkillsUI, 2);
+            playerSkills = new Skill[] { Lunge, Quake };
+            playerData = new Data(playerData.stats, playerSkills, playerData.cPoint);
+
+            Debug.Log(quakeSelected ? $"{Quake.name} is selected" : $"{Quake.name} is not selected");
+
+            DataManager.Save(playerData);
 
         }
 
@@ -165,7 +214,8 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.N))
         {
-            // PlayerStatus.ApplyDamage(20);
+            //PlayerStatus.ApplyDamage(20);
+            //PlayerStatus.DeductMP(10);
         }
 
     }
@@ -176,7 +226,7 @@ public class PlayerController : MonoBehaviour
         {
             if (collision.collider.tag == "Ground" || collision.collider.tag == "Platform")
             {
-                Debug.Log("Entered");
+                // Debug.Log("Entered");
                 isGrounded = true;
                 jumpPhase = jumpPhase != PlayerJump.Grounded ? PlayerJump.Landing : jumpPhase;
 
@@ -200,7 +250,7 @@ public class PlayerController : MonoBehaviour
         {
             if (collision.collider.tag == "Ground" || collision.collider.tag == "Platform")
             {
-                Debug.Log("Exited");
+                // Debug.Log("Exited");
                 isGrounded = false;
             }
         }

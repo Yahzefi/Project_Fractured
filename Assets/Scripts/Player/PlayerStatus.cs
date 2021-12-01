@@ -5,31 +5,16 @@ using UnityEngine;
 
 public class PlayerStatus : MonoBehaviour
 {
-
+    static Data playerData;
     static Stats playerStats;
     static Checkpoint cPoint;
 
-// > player health
+    // > player health
     static int health;
-/*    static GameObject health20;
-    static GameObject health40;
-    static GameObject health60;
-    static GameObject health80;
-    static GameObject health100;*/
 // <
 
 // > player energy
     static int magic;
-/*    static GameObject magic10;
-    static GameObject magic20;
-    static GameObject magic30;
-    static GameObject magic40;
-    static GameObject magic50;
-    static GameObject magic60;
-    static GameObject magic70;
-    static GameObject magic80;
-    static GameObject magic90;
-    static GameObject magic100;*/
     // <
 
     // > player atk
@@ -52,20 +37,23 @@ public class PlayerStatus : MonoBehaviour
     // >> player XP bar/number
     // \\
     // <<
-    // >> player skill bar
-    // \\
-    // <<
+// >> player skill bar
+
+// <<
 
     // <
 
     private void Start()
     {
 
-        playerStats = DataManager.playerData.stats;
+        playerData = DataManager.playerData;
+        playerStats = playerData.stats;
         cPoint = DataManager.playerData.cPoint;
 
         health = playerStats.HP;
         magic = playerStats.MP;
+
+        HUDManager.UpdateHUD(HUD.Start);
 
     }
 
@@ -115,7 +103,11 @@ public class PlayerStatus : MonoBehaviour
         Debug.Log("Player has died");
         playerStats.HP = cPoint == Checkpoint.Start ? 100 : playerStats.HP;
         playerStats.MP = cPoint == Checkpoint.Start ? 100 : playerStats.MP;
-        DataManager.Save(cPoint, playerStats);
+
+        playerData.stats = playerStats;
+        playerData.cPoint = cPoint;
+
+        DataManager.Save(playerData, true);
         // death animation
         // restart scene/level
     }

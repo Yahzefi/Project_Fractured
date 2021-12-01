@@ -13,12 +13,22 @@ public class DialogueScripts : MonoBehaviour
         switch (scriptRef)
         {
 // > LEVEL 01 INTRO
-            case Script.Intro_01:
 
+//          ( [// > && // <] marks first speaker | [// >> && // <<] marks second speaker )          \\
+
+            case Script.Intro00_01:
+                
                 speakers = new string[]
                 {
+                // >
                     "Player",
+                    "Player",
+                    "Player",
+                    "Player",
+                // <
+                // >>
                     "???",
+                // <<
 
                 };
 
@@ -26,12 +36,18 @@ public class DialogueScripts : MonoBehaviour
 // <
 
 // > LEVEL ?? INTRO
-            case Script.Intro_02:
+            case Script.Intro00_02:
 
                 speakers = new string[]
                 {
-                    "",
-                    ""
+                // >>
+                    "???",
+                    "???",
+                // <<
+                // >
+                    "Player",
+                // <
+
                 };
 
                 return speakers;
@@ -47,26 +63,38 @@ public class DialogueScripts : MonoBehaviour
     {
         switch (scriptRef)
         {
-// > LEVEL 01 INTRO
-            case Script.Intro_01:
+// > LEVEL 01 INTRO #1
+            case Script.Intro00_01:
 
                 messages = new string[]
                 {
-                    "God, I hate this place.",
-                    "Do you now?",
+                // >
+                    "...",
+                    "Ah, yes...",
+                    "It seems as though rumors of this place continue to carry across the continents.",
+                    "What a shame...  I haven't had a proper challenge in decades.",
+                // <
+                // >>
+                    "Pardon me.",
+                // <<
 
                 };
 
                 return messages;
 // <
 
-// > LEVEL ?? INTRO
-            case Script.Intro_02:
+// > LEVEL 01 INTRO #2
+            case Script.Intro00_02:
 
                 messages = new string[]
                 {
-                    "",
-                    "",
+                // >>
+                    "I'd hate to interrupt your sulking, but I was curious about something.",
+                    "Tell me, have you ever contemplated the weight of desire?",
+                // <<
+                // >
+                    "*Tsk.*  Who the hell are you?",
+                // <
 
                 };
 

@@ -77,30 +77,44 @@ public struct HUDManager
     static GameObject magic90 = GameObject.Find("Magic_90");
     static GameObject magic100 = GameObject.Find("Magic_100");
 
-/*    static GameObject[] healthSlots = new GameObject[]
+    static GameObject activeUI_Lunge = GameObject.Find("activeStatus_Lunge");
+    static GameObject activeUI_Quake = GameObject.Find("activeStatus_Quake");
+
+    /*    static GameObject[] healthSlots = new GameObject[]
+        {
+            health20,
+            health40,
+            health60,
+            health80,
+            health100
+
+        };
+
+        static GameObject[] magicSlots = new GameObject[]
+        {
+            magic10,
+            magic20,
+            magic30,
+            magic40,
+            magic50,
+            magic60,
+            magic70,
+            magic80,
+            magic90,
+            magic100
+        };*/
+
+
+    public static void UpdateHUD (HUD hType)
     {
-        health20,
-        health40,
-        health60,
-        health80,
-        health100
+        if (hType == HUD.Start)
+        {
+            activeUI_Lunge.SetActive(false);
+            activeUI_Quake.SetActive(false);
+        }
+        else return;
 
-    };
-
-    static GameObject[] magicSlots = new GameObject[]
-    {
-        magic10,
-        magic20,
-        magic30,
-        magic40,
-        magic50,
-        magic60,
-        magic70,
-        magic80,
-        magic90,
-        magic100
-    };*/
-
+    }
 
     public static void UpdateHUD (HUD hType, int? HP, int? MP)
     {
@@ -136,4 +150,52 @@ public struct HUDManager
 
         }
     }
+
+    public static void UpdateHUD (HUD hType, int skillNum)
+    {
+        if (hType == HUD.SkillsUI)
+        {
+            switch (skillNum)
+            {
+                case 1:
+
+                    activeUI_Lunge.SetActive(!activeUI_Lunge.activeSelf);
+
+                    activeUI_Quake.SetActive(false);
+                    // skill 3
+                    // skill 4
+
+                    break;
+
+                case 2:
+
+                    activeUI_Quake.SetActive(!activeUI_Quake.activeSelf);
+
+                    activeUI_Lunge.SetActive(false);
+                    // skill 3
+                    // skill 4
+
+                    break;
+
+                case 3:
+
+                    //
+
+                    break;
+
+                case 4:
+
+                    //
+
+                    break;
+
+                default:
+                    break;
+
+            }
+        }
+        else return;
+
+    }
+
 }

@@ -21,10 +21,15 @@ public class DataManager : MonoBehaviour
     {
 // > STATS
         playerStats = LoadStats(CharType.Player);
-// <
-// > SKILLS
+        // <
+
+        if (!PlayerPrefs.HasKey("SkillAccess_Lunge")) PlayerPrefs.SetInt("SkillAccess_Lunge", 1); // temp
+        if (!PlayerPrefs.HasKey("SkillAccess_Quake")) PlayerPrefs.SetInt("SkillAccess_Quake", 1); // temp
+
+        // > SKILLS
         Lunge = LoadSkill("Lunge");
         Quake = LoadSkill("Quake");
+
         playerSkills = new Skill[] { Lunge, Quake };
 // <
 // > ITEMS / INVENTORY
@@ -41,13 +46,20 @@ public class DataManager : MonoBehaviour
 // <
     }
 
-    public static void Save (Checkpoint cPoint, Stats stats)
+    public static void Save (Data newPlayerData, bool saveToFile = false)
     {
+
+        Checkpoint cPoint = newPlayerData.cPoint;
+        Stats stats = newPlayerData.stats;
+        
+        Skill[] skills = newPlayerData.skills;
+
         switch (cPoint)
         {
             case Checkpoint.Start:
 
                 cPointString = "c0";
+
                 PlayerPrefs.SetString("CurrentCheckpoint", cPointString);
 
                 break;
@@ -56,6 +68,7 @@ public class DataManager : MonoBehaviour
             case Checkpoint.L00_01:
 
                 cPointString = "c00_01";
+
                 PlayerPrefs.SetString("CurrentCheckpoint", cPointString);
 
                 break;
@@ -65,12 +78,32 @@ public class DataManager : MonoBehaviour
 
         }
 
+        // > stats
         PlayerPrefs.SetInt("Player_HP", stats.HP);
         PlayerPrefs.SetInt("Player_MP", stats.MP);
         PlayerPrefs.SetFloat("Player_ATK", stats.ATK);
         PlayerPrefs.SetFloat("Player_DEF", stats.DEF);
+        // <
+        // > skills
+        foreach (Skill skill in skills)
+        {
+            PlayerPrefs.SetInt($"SkillAccess_{skill.name}", skill.isAccessible ? 1 : 0);
+            PlayerPrefs.SetInt($"MPCost_{skill.name}", skill.requiredMP);
+            PlayerPrefs.SetFloat($"SkillDamage_{skill.name}", skill.DMG);
+        }
+        // <
 
-        PlayerPrefs.Save();
+        // Debug.Log("Lunge: " + playerData.skills[0].isSelected);
+        // Debug.Log("Quake: " + playerData.skills[1].isSelected);
+        playerData = newPlayerData;
+        Debug.Log("Lunge: " + playerData.skills[0].isSelected);
+        Debug.Log("Quake: " + playerData.skills[1].isSelected);
+
+
+        if (saveToFile)
+        {
+            PlayerPrefs.Save();
+        }
 
     }
 
@@ -154,23 +187,27 @@ public class DataManager : MonoBehaviour
         {
             case "Lunge":
 
-                info = PlayerPrefs.HasKey("SkillInfo_Lunge") ? PlayerPrefs.GetString("SkillInfo_Lunge") : "";
+                info = PlayerPrefs.HasKey("SkillInfo_Lunge") ? PlayerPrefs.GetString("SkillInfo_Lunge") : 
+                    "";
+
                 requiredMP = PlayerPrefs.HasKey("MPCost_Lunge") ? PlayerPrefs.GetInt("MPCost_Lunge") : 10;
                 DMG = PlayerPrefs.HasKey("SkillDamage_Lunge") ? PlayerPrefs.GetFloat("SkillDamage_Lunge") : 0;
                 isAccessible = PlayerPrefs.HasKey("SkillAccess_Lunge") && PlayerPrefs.GetInt("SkillAccess_Lunge") == 1;
 
-                Lunge = new Skill(skillName, info, requiredMP, DMG);
+                Lunge = new Skill(skillName, info, requiredMP, DMG, isAccessible);
 
                 return Lunge;
 
             case "Quake":
 
-                info = PlayerPrefs.HasKey("SkillInfo_Quake") ? PlayerPrefs.GetString("SkillInfo_Quake") : "";
+                info = PlayerPrefs.HasKey("SkillInfo_Quake") ? PlayerPrefs.GetString("SkillInfo_Quake") : 
+                    "";
+
                 requiredMP = PlayerPrefs.HasKey("MPCost_Quake") ? PlayerPrefs.GetInt("MPCost_Quake") : 30;
                 DMG = PlayerPrefs.HasKey("SkillDamage_Quake") ? PlayerPrefs.GetFloat("SkillDamage_Quake") : 0;
                 isAccessible = PlayerPrefs.HasKey("SkillAccess_Quake") && PlayerPrefs.GetInt("SkillAccess_Quake") == 1;
 
-                Quake = new Skill(skillName, info, requiredMP, DMG);
+                Quake = new Skill(skillName, info, requiredMP, DMG, isAccessible);
 
                 return Quake;
 
