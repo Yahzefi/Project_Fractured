@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (dManager != null && dManager.isTalking) return;
+        if (dManager != null && dManager.sceneIsPlaying) return;
 
         hitColliderPos = hitCollider.transform.localPosition;
 
@@ -155,7 +155,8 @@ public class PlayerController : MonoBehaviour
 
             HUDManager.UpdateHUD(HUD.SkillsUI, 1);
             playerSkills = new Skill[] { Lunge, Quake };
-            playerData = new Data(playerData.stats, playerSkills, playerData.cPoint);
+            // playerData = new Data(playerData.stats, playerSkills, playerData.cPoint, playerData.cutscene);
+            playerData.skills = playerSkills;
 
             // Debug.Log(playerData.skills[0].isSelected + "-- from controller");
             Debug.Log(lungeSelected ? $"{Lunge.name} is selected" : $"{Lunge.name} is not selected");
@@ -186,7 +187,7 @@ public class PlayerController : MonoBehaviour
 
             HUDManager.UpdateHUD(HUD.SkillsUI, 2);
             playerSkills = new Skill[] { Lunge, Quake };
-            playerData = new Data(playerData.stats, playerSkills, playerData.cPoint);
+            playerData = new Data(playerData.stats, playerSkills, playerData.cPoint, playerData.cutscene);
 
             Debug.Log(quakeSelected ? $"{Quake.name} is selected" : $"{Quake.name} is not selected");
 

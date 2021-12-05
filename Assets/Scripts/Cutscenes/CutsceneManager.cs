@@ -8,14 +8,20 @@ public class CutsceneManager : MonoBehaviour
 
     Scene currentLevel;
     Cutscene scene;
+    Data playerData;
 
     Camera sceneCam;
 
-    GameObject player;
-    SpriteRenderer playerSprite;
+    GameObject HUD;
 
-    Animator c_Animator;
-    Animator p_Animator;
+    GameObject player;
+    GameObject enemy;
+    SpriteRenderer playerSprite;
+    SpriteRenderer enemySprite;
+
+    Animator c_Animator; // camera
+    Animator p_Animator; // player
+    Animator e_Animator; // enemy
 
     Vector3 playerPos;
 
@@ -27,17 +33,22 @@ public class CutsceneManager : MonoBehaviour
         dManager = this.GetComponent<DialogueManager>();
 
         currentLevel = SceneManager.GetActiveScene();
-        scene = DataManager.cutscene;
-
-        Debug.Log(scene);
+        playerData = DataManager.playerData;
+        scene = playerData.cutscene;
 
         sceneCam = GameObject.Find("CutsceneCam").GetComponent<Camera>();
+
+        HUD = GameObject.Find("HUD");
+        HUD.SetActive(false);
         
         player = GameObject.Find("Player");
+        enemy = GameObject.Find("Antagonist");
         playerSprite = player.GetComponent<SpriteRenderer>();
+        enemySprite = enemy.GetComponent<SpriteRenderer>();
 
         c_Animator = GameObject.Find("CutsceneCam").GetComponent<Animator>();
         p_Animator = player.GetComponent<Animator>();
+        e_Animator = enemy.GetComponent<Animator>();
 
         c_Animator.enabled = false;
         sceneCam.enabled = false;
@@ -74,7 +85,7 @@ public class CutsceneManager : MonoBehaviour
 
         switch (scene)
         {
-            case Cutscene.S00_01:
+            case Cutscene.S01_01:
 
                 yield return new WaitForSeconds(1.0f);
                 playerSprite.flipX = true;
@@ -87,7 +98,7 @@ public class CutsceneManager : MonoBehaviour
                 p_Animator.SetBool("isRunning", false);
                 isMoving = false;
                 yield return new WaitForSeconds(0.5f);
-                NextStep(); // 1
+                NextStep(c_Animator); // c-1
                 playerSprite.flipX = true;
                 isMoving = true;
                 p_Animator.SetBool("isRunning", true);
@@ -98,32 +109,43 @@ public class CutsceneManager : MonoBehaviour
                 sceneCam.enabled = true;
                 c_Animator.enabled = true;
 
-                StartCoroutine(dManager.initScript(Script.Intro00_01));
+                StartCoroutine(dManager.initScript(1, 1));
                 yield return new WaitWhile(() => dManager.sceneIsPlaying);
 
                 yield return new WaitForSeconds(0.750f);
-                NextStep(); // 2
+                NextStep(c_Animator); // c-2
                 yield return new WaitForSeconds(1.0f);
-
-                NextStep(); // 3
+                NextStep(c_Animator); // c-3
                 yield return new WaitForSeconds(0.750f);
-                NextStep(); // 4
+                NextStep(c_Animator); // c-4
                 yield return new WaitForSeconds(0.750f);
 
-                StartCoroutine(dManager.initScript(Script.Intro00_02));
-
+                StartCoroutine(dManager.initScript(1, 2));
                 yield return new WaitWhile(() => dManager.sceneIsPlaying);
 
                 yield return new WaitForSeconds(0.750f);
-                NextStep(); // 5
+                NextStep(c_Animator); // c-5
+                yield return new WaitForSeconds(0.750f);
 
-                // ant jumps off (or maybe teleports) pillar and lands in front of player
-                
-                // zoom in on both of them
+                NextStep(e_Animator); // e-1
+                yield return new WaitForSeconds(2.017f);
+                NextStep(e_Animator); // e-2
+                NextStep(c_Animator); // c-6
+                playerSprite.flipX = false;
+                yield return new WaitForSeconds(1.5f);
 
-                // dialogue
+                StartCoroutine(dManager.initScript(1, 3));
+                yield return new WaitWhile(() => dManager.sceneIsPlaying);
 
-                // player loses abilities
+                NextStep(e_Animator); // e-3
+                yield return new WaitForSeconds(0.517f);
+
+                StartCoroutine(dManager.initScript(1, 4));
+                yield return new WaitWhile(() => dManager.sceneIsPlaying);
+
+
+                playerData.cutscene = Cutscene.S01_02;
+                DataManager.Save(playerData);
 
                 break;
 
@@ -135,9 +157,9 @@ public class CutsceneManager : MonoBehaviour
         yield return null;
     }
 
-    void NextStep ()
+    void NextStep (Animator animator)
     {
-        c_Animator.SetInteger("SceneStep", c_Animator.GetInteger("SceneStep") + 1);
+        animator.SetInteger("SceneStep", animator.GetInteger("SceneStep") + 1);
     }
 
 }

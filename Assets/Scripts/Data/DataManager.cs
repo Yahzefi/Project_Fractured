@@ -9,13 +9,17 @@ public class DataManager : MonoBehaviour
     Stats playerStats;
     Skill[] playerSkills;
     Checkpoint cPoint;
+
     public static Cutscene cutscene;
+    public static int levelNum;
+    public static int sceneNum;
 
     Skill Lunge;
     Skill Quake;
 
     static string sceneString;
     static string cPointString;
+
 
     void Awake()
     {
@@ -42,7 +46,7 @@ public class DataManager : MonoBehaviour
         cPoint = LoadCheckpoint();
 // <
 // > DATA
-        playerData = new Data(playerStats, playerSkills, cPoint);
+        playerData = new Data(playerStats, playerSkills, cPoint, cutscene);
 // <
     }
 
@@ -51,9 +55,12 @@ public class DataManager : MonoBehaviour
 
         Checkpoint cPoint = newPlayerData.cPoint;
         Stats stats = newPlayerData.stats;
-        
         Skill[] skills = newPlayerData.skills;
+        Cutscene cutscene = newPlayerData.cutscene;
 
+        Debug.Log(newPlayerData.cutscene);
+
+        // > checkpoint
         switch (cPoint)
         {
             case Checkpoint.Start:
@@ -64,10 +71,10 @@ public class DataManager : MonoBehaviour
 
                 break;
 
-// > Level 00 Checkpoint 01
-            case Checkpoint.L00_01:
+// > Level 01 Checkpoint 01
+            case Checkpoint.L01_01:
 
-                cPointString = "c00_01";
+                cPointString = "c01_01";
 
                 PlayerPrefs.SetString("CurrentCheckpoint", cPointString);
 
@@ -77,7 +84,7 @@ public class DataManager : MonoBehaviour
                 break;
 
         }
-
+        // <
         // > stats
         PlayerPrefs.SetInt("Player_HP", stats.HP);
         PlayerPrefs.SetInt("Player_MP", stats.MP);
@@ -90,6 +97,26 @@ public class DataManager : MonoBehaviour
             PlayerPrefs.SetInt($"SkillAccess_{skill.name}", skill.isAccessible ? 1 : 0);
             PlayerPrefs.SetInt($"MPCost_{skill.name}", skill.requiredMP);
             PlayerPrefs.SetFloat($"SkillDamage_{skill.name}", skill.DMG);
+        }
+        // <
+        // > cutscene
+        switch (cutscene)
+        {
+            case Cutscene.S01_01:
+
+                PlayerPrefs.SetString("CurrentCutscene", "S01_01");
+
+                break;
+
+            case Cutscene.S01_02:
+
+                PlayerPrefs.SetString("CurrentCutscene", "S01_02");
+
+                break;
+
+            default:
+                break;
+
         }
         // <
 
@@ -119,13 +146,13 @@ public class DataManager : MonoBehaviour
 
     Cutscene LoadCutscene ()
     {
-        sceneString = PlayerPrefs.HasKey("CurrentCutscene") ? PlayerPrefs.GetString("CurrentCutscene") : "S00_01";
+        sceneString = PlayerPrefs.HasKey("CurrentCutscene") ? PlayerPrefs.GetString("CurrentCutscene") : "S01_01";
 
         switch (sceneString)
         {
-            case "S00_01":
+            case "S01_01":
 
-                //
+                cutscene = Cutscene.S01_01;
 
                 return cutscene;
 
@@ -144,6 +171,10 @@ public class DataManager : MonoBehaviour
             case "c0":
 
                 return Checkpoint.Start;
+
+            case "c01_01":
+
+                return Checkpoint.L01_01;
 
             default:
                 return Checkpoint.Start;

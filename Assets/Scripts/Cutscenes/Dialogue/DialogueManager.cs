@@ -7,6 +7,8 @@ public class DialogueManager : MonoBehaviour
 {
     DialogueScripts scripts;
 
+    IEnumerator routine;
+
     GameObject canvas;
     GameObject border;
     GameObject speakerBox_Left;
@@ -22,9 +24,12 @@ public class DialogueManager : MonoBehaviour
     [HideInInspector] public bool isTalking = false;
     [HideInInspector] public bool sceneIsPlaying = false;
     bool isFlashing = false;
+    bool spamGuardOn = false;
 
     string[] speakerList;
     string[] messageList;
+
+    string currMsg;
 
     // Start is called before the first frame update
     void Start()
@@ -64,75 +69,49 @@ public class DialogueManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && isFlashing)
+        if (Input.GetKeyDown(KeyCode.Return) && !spamGuardOn && isTalking)
         {
-            dName_Left.text = speakerBox_Left.activeInHierarchy ? "" : dName_Left.text;
-            dName_Right.text = speakerBox_Right.activeInHierarchy ? "" : dName_Right.text;
-            dText.text = "";
-            isFlashing = false;
+            StartCoroutine(Pause(0.5f));
+
+            if (isFlashing)
+            {
+                dText.text = "";
+                isFlashing = false;
+            }
+            else
+            {
+                StopCoroutine(routine);
+                dText.text = currMsg;
+                isFlashing = true;
+                StartCoroutine(flashIndicator());
+            }
+
+
         }
     }
 
-/*    void PlayIntroScene ()
+    IEnumerator Pause (float seconds)
     {
-        switch (currentScene.name)
-        {
-            case "Level_01":
-                StartCoroutine(initScript(Script.Intro_01));
-
-                break;
-
-            case "Level_02":
-                //
-
-                break;
-
-            default:
-                break;
-        }
-    }*/
-
-    void StartInteraction(Script scriptRef)
-    {
-        switch (scriptRef)
-        {
-            case Script.InteractionWithNPC01:
-                break;
-            default:
-                break;
-        }
+        spamGuardOn = true;
+        yield return new WaitForSeconds(seconds);
+        spamGuardOn = false;
     }
 
-    public IEnumerator initScript(Script scriptRef)
+    public IEnumerator initScript(int levelNum, int sceneNum)
     {
 
         sceneIsPlaying = true;
 
-        switch (scriptRef)
-        {
-            case Script.Intro00_01:
-
-                speakerList = scripts.fetchSpeakers(Script.Intro00_01);
-                messageList = scripts.fetchMessages(Script.Intro00_01);
-
-                break;
-
-            case Script.Intro00_02:
-
-                speakerList = scripts.fetchSpeakers(Script.Intro00_02);
-                messageList = scripts.fetchMessages(Script.Intro00_02);
-
-                break;
-
-            default:
-                break;
-        }
+        speakerList = scripts.fetchSpeakers(levelNum, sceneNum);
+        messageList = scripts.fetchMessages(levelNum, sceneNum);
 
         canvas.SetActive(true);
 
         for (int i = 0; i < messageList.Length; i++)
         {
-            StartCoroutine(TypeText(speakerList[i], messageList[i]));
+            routine = TypeText(speakerList[i], messageList[i]);
+            currMsg = messageList[i];
+            StartCoroutine(routine);
             yield return new WaitWhile(() => isTalking);
 
         }
@@ -156,12 +135,16 @@ public class DialogueManager : MonoBehaviour
 
         if (speakerBox_Left.activeInHierarchy)
         {
+            dName_Right.text = "";
+
             dName_Left.text = speakerName;
             dName_Left.color = Color.blue;
             dText.color = new Color(225, 225, 225);
         }
         else if (speakerBox_Right.activeInHierarchy)
         {
+            dName_Left.text = "";
+
             dName_Right.text = speakerName;
             dName_Right.color = Color.grey;
             dText.color = Color.red;
@@ -175,11 +158,22 @@ public class DialogueManager : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
 
+
         if (dText.text == message)
         {
             isFlashing = true;
         }
 
+
+        StartCoroutine(flashIndicator());
+
+        yield return new WaitWhile(() => isFlashing);
+
+        yield return null;
+    }
+
+    IEnumerator flashIndicator ()
+    {
         while (isFlashing)
         {
             indicator.SetActive(true);
@@ -192,6 +186,5 @@ public class DialogueManager : MonoBehaviour
 
         isTalking = false;
 
-        yield return null;
     }
 }

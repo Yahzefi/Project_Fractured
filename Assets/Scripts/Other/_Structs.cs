@@ -6,12 +6,14 @@ public struct Data
     public Stats stats;
     public Skill[] skills;
     public Checkpoint cPoint;
+    public Cutscene cutscene;
 
-    public Data(Stats stats, Skill[] skills, Checkpoint cPoint)
+    public Data(Stats stats, Skill[] skills, Checkpoint cPoint, Cutscene cutscene)
     {
         this.stats = stats;
         this.skills = skills;
         this.cPoint = cPoint;
+        this.cutscene = cutscene;
     }
 
 }
@@ -79,31 +81,6 @@ public struct HUDManager
 
     static GameObject activeUI_Lunge = GameObject.Find("activeStatus_Lunge");
     static GameObject activeUI_Quake = GameObject.Find("activeStatus_Quake");
-
-    /*    static GameObject[] healthSlots = new GameObject[]
-        {
-            health20,
-            health40,
-            health60,
-            health80,
-            health100
-
-        };
-
-        static GameObject[] magicSlots = new GameObject[]
-        {
-            magic10,
-            magic20,
-            magic30,
-            magic40,
-            magic50,
-            magic60,
-            magic70,
-            magic80,
-            magic90,
-            magic100
-        };*/
-
 
     public static void UpdateHUD (HUD hType)
     {

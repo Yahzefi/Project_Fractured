@@ -41,18 +41,9 @@ public enum PlayerJump
 //      CUTSCENES       \\
 public enum Cutscene
 {
-    S00_01,
-    S00_02,
     S01_01,
-}
-
-//      DIALOGUE        \\
-public enum Script
-{
-    Intro00_01,
-    Intro00_02,
-    InteractionWithNPC01,
-    InteractionWithNPC02
+    S01_02,
+    S01_03,
 }
 
 //      DATA MANAGEMENT     \\
@@ -66,7 +57,7 @@ public enum CharType
 public enum Checkpoint
 {
     Start,
-    L00_01,
+    L01_01,
 }
 
 //      UI      \\

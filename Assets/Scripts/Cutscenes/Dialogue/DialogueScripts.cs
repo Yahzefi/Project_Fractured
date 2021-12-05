@@ -8,103 +8,228 @@ public class DialogueScripts : MonoBehaviour
     string[] speakers;
     string[] messages;
 
-    public string[] fetchSpeakers (Script scriptRef)
+// !fs
+    public string[] fetchSpeakers(int levelNum, int sceneNum)
     {
-        switch (scriptRef)
+// !L1_s
+        if (levelNum == 1)
         {
-// > LEVEL 01 INTRO
+            switch (sceneNum)
+            {
+                case 1:
 
-//          ( [// > && // <] marks first speaker | [// >> && // <<] marks second speaker )          \\
+                    speakers = new string[]
+                    {
+                        "Player",
+                        "Player",
+                        "Player",
+                        "Player",
+                        "Player",
+                        "???"
+                    };
 
-            case Script.Intro00_01:
-                
-                speakers = new string[]
-                {
-                // >
-                    "Player",
-                    "Player",
-                    "Player",
-                    "Player",
-                // <
-                // >>
-                    "???",
-                // <<
+                    return speakers;
 
-                };
+                case 2:
 
-                return speakers;
-// <
+                    speakers = new string[]
+                    {
+                        "???"
+                    };
 
-// > LEVEL ?? INTRO
-            case Script.Intro00_02:
+                    return speakers;
 
-                speakers = new string[]
-                {
-                // >>
-                    "???",
-                    "???",
-                // <<
-                // >
-                    "Player",
-                // <
+                case 3:
 
-                };
+                    speakers = new string[]
+                    {
+                        "???",
+                        "Player",
+                        "???",
+                        "Player",
+                        "???",
+                        "Player"
+                    };
 
-                return speakers;
-// <
+                    return speakers;
 
-            default:
-                return null;
+                case 4:
 
+                    speakers = new string[]
+                    {
+                        "Player",
+                        "Player",
+                        "Player",
+                        "Player",
+                        "???",
+                        "???",
+                        "???",
+                        "Player",
+                        "???",
+                        "???",
+                        "Player"
+                    };
+
+                    return speakers;
+
+                case 5:
+
+                    speakers = new string[]
+                    {
+                        "Player",
+                        "Player",
+                        "Player",
+                        "Player",
+                        "Player",
+                        "Player"
+                    };
+
+                    return speakers;
+
+                default:
+                    return null;
+
+            }
+        }
+        else if (levelNum == 2)
+        {
+            return null;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+// !fm
+    public string[] fetchMessages(int levelNum, int sceneNum)
+    {
+
+        /* 
+            [// > && // <] = first speaker 
+            [// >> && // <<] = second speaker
+        */
+
+// !L1_m
+        if (levelNum == 1)
+        {
+            switch (sceneNum)
+            {
+                case 1:
+
+                    messages = new string[]
+                    {
+                    // > Player
+                        "...",
+                        "Ah, yes...",
+                        "It seems as though rumors of this place continue to carry across the continents.",
+                        "There's only been a small handful stupid enough to come since I arrived.",
+                        "In the end they were nothing but peons high off arbitrary reputation.",
+                    // <
+                    // >> ???
+                        "Pardon me.",
+                    // <<
+                    };
+
+                    return messages;
+
+                case 2:
+
+                    messages = new string[]
+                    {
+                    // >> ???
+                        "I'd hate to interrupt your sulking, but I was curious about something.",
+                    // <<
+                    };
+
+                    return messages;
+
+                case 3:
+
+                    messages = new string[]
+                    {
+                    // >> ???
+                        "Tell me, have you ever contemplated the weight of desire and the consequences that follow?",
+                    // <<
+                    // > Player
+                        "Oh great...  My first visitor in years is philosophical.",
+                    // <
+                    // >> ???
+                        "Now, now.  This'll only take a moment.  Tell me, have you ever heard the tale of Achilles?",
+                    // <<
+                    // > Player
+                        "What of that mortal fool?  Are you here to fight or to continue running your mouth?",
+                    // <
+                    // >> ???
+                        "Hm...  I see.  It really is quite unfortunate.  How one could be so aware of one's own weakness and yet still fall on the battlefield.",
+                    // <<
+                    // > Player
+                        "What are you-"
+                    // <
+                    };
+
+                    return messages;
+
+                case 4:
+
+                    messages = new string[]
+                    {
+                    // > Player
+                        "Y-You bastard...  What'd you just...  Wait a second, no you didn't...",
+                        "I don't know how, but you took it didn't you?!  Heh...",
+                        "Haha...  HAHAHAHAHAHAHA!  ",
+                        "Are you suicidal or something? Have you no idea who you're dealing with right now?!",
+                    // <
+                    // >> ???
+                        "If you know what I now hold then surely you already know the answer.",
+                        "What a shame...  Your preposterous pride has bloated your ego much larger than I'd predicted.",
+                        "It truly pains me to witness such an abhorrent sight.",
+                    // <<
+                    // > Player
+                        "Predicted?  You don't know SHIT about me!",
+                    // <
+                    // >> ???
+                        "Indeed...  I regret that I must agree with such a conclusion; however, that is of little importance now.  I've recovered the artifact.",
+                        "Farewell.",
+                    // <<
+                    // > Player
+                        "You think I'll just let you-"
+                    // <
+                    };
+
+                    return messages;
+
+                case 5:
+
+                    messages = new string[]
+                    {
+                    // > Player
+                        "DAMMIT!!!",
+                        "How did this happen..?  It's hard enough to believe he knew about the artifact, but for him to just... take it. ",
+                        "He acted like I was nothing, as if i was a mere child.",
+                        "He doesn't know...  Nobody could possibly understand what I went through to find it.",
+                        "Heh...  Well whaddaya know!  Looks like I finally got an excuse to leave this shithole.",
+                        "Let's milk some fun outta this, shall we?"
+                    // <
+                    };
+
+                    return messages;
+
+                default:
+                    return null;
+
+            }
+        }
+        else if (levelNum == 2)
+        {
+            return null;
+        }
+        else
+        {
+            return null;
         }
     }
 
-    public string[] fetchMessages (Script scriptRef)
-    {
-        switch (scriptRef)
-        {
-// > LEVEL 01 INTRO #1
-            case Script.Intro00_01:
-
-                messages = new string[]
-                {
-                // >
-                    "...",
-                    "Ah, yes...",
-                    "It seems as though rumors of this place continue to carry across the continents.",
-                    "What a shame...  I haven't had a proper challenge in decades.",
-                // <
-                // >>
-                    "Pardon me.",
-                // <<
-
-                };
-
-                return messages;
-// <
-
-// > LEVEL 01 INTRO #2
-            case Script.Intro00_02:
-
-                messages = new string[]
-                {
-                // >>
-                    "I'd hate to interrupt your sulking, but I was curious about something.",
-                    "Tell me, have you ever contemplated the weight of desire?",
-                // <<
-                // >
-                    "*Tsk.*  Who the hell are you?",
-                // <
-
-                };
-
-                return messages;
-// <
-
-            default:
-                return null;
-
-        }
-    }
 
 }
