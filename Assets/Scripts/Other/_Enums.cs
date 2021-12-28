@@ -3,6 +3,7 @@ using UnityEngine;
 //      ANIMATION       \\
 public enum Movement
 {
+    Spawn,
     Walk,
     Run,
     Jump,
@@ -50,6 +51,7 @@ public enum Cutscene
 public enum CharType
 {
     Player,
+    Rin,
     Enemy01,
     Enemy02
 }

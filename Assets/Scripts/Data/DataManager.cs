@@ -20,7 +20,6 @@ public class DataManager : MonoBehaviour
     static string sceneString;
     static string cPointString;
 
-
     void Awake()
     {
 // > STATS
@@ -156,6 +155,12 @@ public class DataManager : MonoBehaviour
 
                 return cutscene;
 
+            case "S01_02":
+
+                cutscene = Cutscene.S01_02;
+
+                return cutscene;
+
             default:
                 return cutscene;
 
@@ -248,20 +253,5 @@ public class DataManager : MonoBehaviour
         }
 
     }
-
-/*    Skill[] LoadSkills (string[] skillNames)
-    {
-
-        Skill[] loadedSkills = new Skill[skillNames.Length];
-
-        for (int i = 0; i < skillNames.Length; i++)
-        {
-            Skill currSkill = LoadSkill(skillNames[i]);
-            loadedSkills.SetValue(currSkill, i);
-        }
-
-        return loadedSkills;
-
-    }*/
 
 }

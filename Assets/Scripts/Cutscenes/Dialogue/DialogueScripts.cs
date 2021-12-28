@@ -91,9 +91,24 @@ public class DialogueScripts : MonoBehaviour
 
             }
         }
+// !L2_s
         else if (levelNum == 2)
         {
-            return null;
+            switch (sceneNum)
+            {
+                case 1:
+
+                    speakers = new string[]
+                    {
+                        ""
+                    };
+
+                    return speakers;
+
+                default:
+                    return null;
+
+            }
         }
         else
         {
@@ -221,9 +236,24 @@ public class DialogueScripts : MonoBehaviour
 
             }
         }
+// !L2_m
         else if (levelNum == 2)
         {
-            return null;
+            switch (sceneNum)
+            {
+                case 1:
+
+                    messages = new string[]
+                    {
+                        ""
+                    };
+
+                    return messages;
+
+                default:
+                    return null;
+
+            }
         }
         else
         {

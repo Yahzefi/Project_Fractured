@@ -8,6 +8,7 @@ public class DialogueManager : MonoBehaviour
     DialogueScripts scripts;
 
     IEnumerator routine;
+    IEnumerator flash;
 
     GameObject canvas;
     GameObject border;
@@ -69,21 +70,31 @@ public class DialogueManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (Input.GetKeyDown(KeyCode.Return) && !spamGuardOn && isTalking)
         {
-            StartCoroutine(Pause(0.5f));
+            StartCoroutine(Pause(0.1f));
 
             if (isFlashing)
             {
+                if (flash != null)
+                {
+                    StopCoroutine(flash);
+                }
                 dText.text = "";
                 isFlashing = false;
+                isTalking = false;
             }
             else
             {
-                StopCoroutine(routine);
+                if (routine != null)
+                {
+                    StopCoroutine(routine);
+                }
                 dText.text = currMsg;
                 isFlashing = true;
-                StartCoroutine(flashIndicator());
+                flash = flashIndicator();
+                StartCoroutine(flash);
             }
 
 
@@ -164,8 +175,8 @@ public class DialogueManager : MonoBehaviour
             isFlashing = true;
         }
 
-
-        StartCoroutine(flashIndicator());
+        flash = flashIndicator();
+        StartCoroutine(flash);
 
         yield return new WaitWhile(() => isFlashing);
 
@@ -183,8 +194,6 @@ public class DialogueManager : MonoBehaviour
         }
 
         yield return new WaitWhile(() => isFlashing);
-
-        isTalking = false;
 
     }
 }
