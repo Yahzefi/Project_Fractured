@@ -8,6 +8,8 @@ TagManager:
   - Platform
   - Spike
   - Enemy
+  - Attack
+  - Trigger
   layers:
   - Default
   - TransparentFX

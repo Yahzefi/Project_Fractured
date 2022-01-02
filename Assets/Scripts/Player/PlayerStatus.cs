@@ -107,7 +107,7 @@ public class PlayerStatus : MonoBehaviour
         playerData.stats = playerStats;
         playerData.cPoint = cPoint;
 
-        DataManager.Save(playerData, true);
+        DataManager.Save(CharType.Player, playerData, true);
         // death animation
         // restart scene/level
     }

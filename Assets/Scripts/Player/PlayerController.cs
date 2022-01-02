@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool quakeActive = false;
     // <
 
+    [HideInInspector] public bool hasContact = false;
+
     // > animation parameters
     [HideInInspector] public bool isGrounded = true;
     [HideInInspector] public bool isRunning = false;
@@ -44,6 +46,13 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector] public float maxVelocity = 7.5f;
 
+    // > knockback distance from enemy attack
+    [HideInInspector] public float knockbackDist = 0;
+    // <
+    // > force of knockback / how hard it hits
+    [HideInInspector] public float knockbackForce = 6.5f;
+    // <
+
     [HideInInspector] public PlayerJump jumpPhase;
     [HideInInspector] public PlayerRun runPhase;
     // <
@@ -52,9 +61,11 @@ public class PlayerController : MonoBehaviour
     GameObject player;
     SpriteRenderer p_Sprite;
     Animator p_Animator;
-    // >> hit collider
+    // >> colliders
     GameObject hitCollider;
+    GameObject topCollider;
     Vector3 hitColliderPos;
+    Vector3 topColliderPos;
     // <<
     // <
 
@@ -68,6 +79,7 @@ public class PlayerController : MonoBehaviour
         dManager = GameObject.Find("SceneManager").GetComponent<DialogueManager>();
 
         hitCollider = GameObject.Find("hitCollider");
+        topCollider = GameObject.Find("topCollider");
 
         playerData = DataManager.playerData;
         playerSkills = playerData.skills;
@@ -93,6 +105,7 @@ public class PlayerController : MonoBehaviour
         if (dManager != null && dManager.sceneIsPlaying) return;
 
         hitColliderPos = hitCollider.transform.localPosition;
+        topColliderPos = topCollider.transform.localPosition;
 
         if (Input.GetKey(KeyCode.D))
         {
@@ -161,7 +174,7 @@ public class PlayerController : MonoBehaviour
             // Debug.Log(playerData.skills[0].isSelected + "-- from controller");
             Debug.Log(lungeSelected ? $"{Lunge.name} is selected" : $"{Lunge.name} is not selected");
 
-            DataManager.Save(playerData);
+            DataManager.Save(CharType.Player, playerData);
 
         }
 
@@ -191,7 +204,7 @@ public class PlayerController : MonoBehaviour
 
             Debug.Log(quakeSelected ? $"{Quake.name} is selected" : $"{Quake.name} is not selected");
 
-            DataManager.Save(playerData);
+            DataManager.Save(CharType.Player, playerData);
 
         }
 
@@ -212,6 +225,7 @@ public class PlayerController : MonoBehaviour
         {
             p_Animator.SetBool("isGrounded", isGrounded);
         }
+
 
         if (Input.GetKeyDown(KeyCode.N))
         {
@@ -235,12 +249,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (collision.collider.tag == "EnemyStrike")
-            {
-                Debug.Log("Hit");
-                isHit = true;
-                PlayerStatus.ApplyDamage(20);
-            }
+            //
         }
     }
 
@@ -258,6 +267,30 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.tag == "Attack")
+        {
+            Debug.Log("Hit");
+            hasContact = true;
+
+            switch(collider.transform.parent.name)
+            {
+                case "Skeleton":
+
+                    PlayerStatus.ApplyDamage(Combat.CalculateDamage(playerData.stats.DEF, DataManager.skeletonData.stats.ATK));
+
+                    break;
+
+                default:
+                    break;
+            }
+
+            knockbackDist = collider.transform.parent.position.x > this.transform.position.x ? -2: 2;
+
+        }
+    }
+
     public void Move(Rigidbody2D playerBody, Direction direction)
     {
 
@@ -270,8 +303,6 @@ public class PlayerController : MonoBehaviour
         switch (direction)
         {
             case Direction.Right:
-
-                // switch case where at 1/4 of the way to max velocity, velocityX is 0.25 || 1/2 -> 0.5, etc.. \\
 
                 if (playerBody.velocity.x < 0.5f)
                 {
@@ -419,8 +450,10 @@ public class PlayerController : MonoBehaviour
 
             case Movement.Hit:
 
+                hasContact = false;
+                isHit = true;
                 p_Animator.SetBool("isHit", isHit);
-                //yield return new WaitForSeconds(0.0f);
+                yield return new WaitForSeconds(0.25f);
                 isHit = false;
                 p_Animator.SetBool("isHit", isHit);
 

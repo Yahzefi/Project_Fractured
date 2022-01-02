@@ -7,6 +7,8 @@ public class DetectAttack : MonoBehaviour
 
     PlayerController player;
 
+    Collider2D otherCollider;
+
     bool hitLanded = false;
 
     private void Start()
@@ -14,23 +16,42 @@ public class DetectAttack : MonoBehaviour
         player = GameObject.Find("Player").GetComponent<PlayerController>();
     }
 
+    private void Update()
+    {
+        otherCollider = Physics2D.OverlapCircle(this.transform.position, 0.25f);
+    }
+
     private void FixedUpdate()
     {
         
-        Collider2D collider = Physics2D.OverlapCircle(this.transform.position, 0.25f);
         
-        if (collider != null && player.isAttacking)
+        if (otherCollider != null && player.isAttacking)
         {
             if (!hitLanded)
             {
 
                 hitLanded = true;
 
-                switch (collider.tag)
+                switch (otherCollider.tag)
                 {
                     case "Platform":
                         Debug.Log("Hit Platform");
                         break;
+                    case "Attack":
+                        /*                        Debug.Log(collider.name);
+                                                Debug.Log(collider.transform.parent.name);
+                                                Debug.Log(collider.transform.parent.tag);*/
+
+                        // if (player.hasContact) return;
+
+                        if (otherCollider.transform.parent.name == "Skeleton")
+                        {
+                            SkeletonAI skel = otherCollider.GetComponentInParent<SkeletonAI>();
+                            skel.hasContact = true;
+                        }
+
+                        break;
+
                     default:
                         break;
                 }

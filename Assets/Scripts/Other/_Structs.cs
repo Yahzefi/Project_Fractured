@@ -1,39 +1,5 @@
 using UnityEngine;
 
-public struct Data
-{
-
-    public Stats stats;
-    public Skill[] skills;
-    public Checkpoint cPoint;
-    public Cutscene cutscene;
-
-    public Data(Stats stats, Skill[] skills, Checkpoint cPoint, Cutscene cutscene)
-    {
-        this.stats = stats;
-        this.skills = skills;
-        this.cPoint = cPoint;
-        this.cutscene = cutscene;
-    }
-
-}
-public struct Stats
-{
-    public int HP;
-    public int MP;
-    public float ATK;
-    public float DEF;
-
-    public Stats(int health, int energy, float attack, float defense)
-    {
-        HP = health;
-        MP = energy;
-        ATK = attack;
-        DEF = defense;
-    }
-
-}
-
 public struct Skill
 {
 
@@ -62,22 +28,22 @@ public struct Skill
 public struct HUDManager
 {
 
-    static GameObject health20 = GameObject.Find("Health_20");
-    static GameObject health40 = GameObject.Find("Health_40");
-    static GameObject health60 = GameObject.Find("Health_60");
-    static GameObject health80 = GameObject.Find("Health_80");
-    static GameObject health100 = GameObject.Find("Health_100");
+    static GameObject health01 = GameObject.Find("Health_01");
+    static GameObject health02 = GameObject.Find("Health_02");
+    static GameObject health03 = GameObject.Find("Health_03");
+    static GameObject health04 = GameObject.Find("Health_04");
+    static GameObject health05 = GameObject.Find("Health_05");
 
+    static GameObject magic01 = GameObject.Find("Magic_01");
+    static GameObject magic02 = GameObject.Find("Magic_02");
+    static GameObject magic03 = GameObject.Find("Magic_03");
+    static GameObject magic04 = GameObject.Find("Magic_04");
+    static GameObject magic05 = GameObject.Find("Magic_05");
+    static GameObject magic06 = GameObject.Find("Magic_06");
+    static GameObject magic07 = GameObject.Find("Magic_07");
+    static GameObject magic08 = GameObject.Find("Magic_08");
+    static GameObject magic09 = GameObject.Find("Magic_09");
     static GameObject magic10 = GameObject.Find("Magic_10");
-    static GameObject magic20 = GameObject.Find("Magic_20");
-    static GameObject magic30 = GameObject.Find("Magic_30");
-    static GameObject magic40 = GameObject.Find("Magic_40");
-    static GameObject magic50 = GameObject.Find("Magic_50");
-    static GameObject magic60 = GameObject.Find("Magic_60");
-    static GameObject magic70 = GameObject.Find("Magic_70");
-    static GameObject magic80 = GameObject.Find("Magic_80");
-    static GameObject magic90 = GameObject.Find("Magic_90");
-    static GameObject magic100 = GameObject.Find("Magic_100");
 
     static GameObject activeUI_Lunge = GameObject.Find("activeStatus_Lunge");
     static GameObject activeUI_Quake = GameObject.Find("activeStatus_Quake");
@@ -99,26 +65,26 @@ public struct HUDManager
         {
             case HUD.PlayerHealth:
 
-                health100.SetActive(HP == 100);
-                health80.SetActive(HP >= 80);
-                health60.SetActive(HP >= 60);
-                health40.SetActive(HP >= 40);
-                health20.SetActive(HP >= 20);
+                health05.SetActive(HP == 5);
+                health04.SetActive(HP >= 4);
+                health03.SetActive(HP >= 3);
+                health02.SetActive(HP >= 2);
+                health01.SetActive(HP >= 1);
 
                 break;
 
             case HUD.PlayerMagic:
 
-                magic100.SetActive(false);
-                magic90.SetActive(MP >= 90);
-                magic80.SetActive(MP >= 80);
-                magic70.SetActive(MP >= 70);
-                magic60.SetActive(MP >= 60);
-                magic50.SetActive(MP >= 50);
-                magic40.SetActive(MP >= 40);
-                magic30.SetActive(MP >= 30);
-                magic20.SetActive(MP >= 20);
-                magic10.SetActive(MP >= 10);
+                magic10.SetActive(false);
+                magic09.SetActive(MP >= 9);
+                magic08.SetActive(MP >= 8);
+                magic07.SetActive(MP >= 7);
+                magic06.SetActive(MP >= 6);
+                magic05.SetActive(MP >= 5);
+                magic04.SetActive(MP >= 4);
+                magic03.SetActive(MP >= 3);
+                magic02.SetActive(MP >= 2);
+                magic01.SetActive(MP >= 1);
 
                 break;
 

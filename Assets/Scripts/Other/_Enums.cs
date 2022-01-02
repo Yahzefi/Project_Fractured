@@ -52,8 +52,8 @@ public enum CharType
 {
     Player,
     Rin,
-    Enemy01,
-    Enemy02
+    Skeleton
+
 }
 
 public enum Checkpoint

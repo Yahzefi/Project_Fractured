@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DataManager : MonoBehaviour
 {
+    static Stats loadedStats;
+
+
     public static Data playerData;
+    public static Data skeletonData;
 
     Stats playerStats;
     Skill[] playerSkills;
@@ -19,12 +24,13 @@ public class DataManager : MonoBehaviour
 
     static string sceneString;
     static string cPointString;
+    static string chapterName;
 
     void Awake()
     {
 // > STATS
         playerStats = LoadStats(CharType.Player);
-        // <
+// <
 
         if (!PlayerPrefs.HasKey("SkillAccess_Lunge")) PlayerPrefs.SetInt("SkillAccess_Lunge", 1); // temp
         if (!PlayerPrefs.HasKey("SkillAccess_Quake")) PlayerPrefs.SetInt("SkillAccess_Quake", 1); // temp
@@ -46,84 +52,96 @@ public class DataManager : MonoBehaviour
 // <
 // > DATA
         playerData = new Data(playerStats, playerSkills, cPoint, cutscene);
+        skeletonData = new Data(LoadStats(CharType.Skeleton));
 // <
     }
 
-    public static void Save (Data newPlayerData, bool saveToFile = false)
+    public static void Save (CharType cType, Data newData, bool saveToFile = false)
     {
 
-        Checkpoint cPoint = newPlayerData.cPoint;
-        Stats stats = newPlayerData.stats;
-        Skill[] skills = newPlayerData.skills;
-        Cutscene cutscene = newPlayerData.cutscene;
+        Stats stats = newData.stats;
 
-        Debug.Log(newPlayerData.cutscene);
+        Checkpoint cPoint;
+        Skill[] skills;
+        Cutscene cutscene;
 
-        // > checkpoint
-        switch (cPoint)
+        if (cType == CharType.Player)
         {
-            case Checkpoint.Start:
+            cPoint = newData.cPoint;
+            skills = newData.skills;
+            cutscene = newData.cutscene;
+            Debug.Log(newData.cutscene);
 
-                cPointString = "c0";
+            // > checkpoint
+            switch (cPoint)
+            {
+                case Checkpoint.Start:
 
-                PlayerPrefs.SetString("CurrentCheckpoint", cPointString);
+                    cPointString = "c0";
 
-                break;
+                    PlayerPrefs.SetString("CurrentCheckpoint", cPointString);
 
-// > Level 01 Checkpoint 01
-            case Checkpoint.L01_01:
+                    break;
 
-                cPointString = "c01_01";
+    // > Level 01 Checkpoint 01
+                case Checkpoint.L01_01:
 
-                PlayerPrefs.SetString("CurrentCheckpoint", cPointString);
+                    cPointString = "c01_01";
 
-                break;
+                    PlayerPrefs.SetString("CurrentCheckpoint", cPointString);
 
-            default:
-                break;
+                    break;
+
+                default:
+                    break;
+
+            }
+            // <
+            // > stats
+            PlayerPrefs.SetInt("Player_HP", stats.HP);
+            PlayerPrefs.SetInt("Player_MP", stats.MP);
+            PlayerPrefs.SetFloat("Player_ATK", stats.ATK);
+            PlayerPrefs.SetFloat("Player_DEF", stats.DEF);
+            // <
+            // > skills
+            foreach (Skill skill in skills)
+            {
+                PlayerPrefs.SetInt($"SkillAccess_{skill.name}", skill.isAccessible ? 1 : 0);
+                PlayerPrefs.SetInt($"MPCost_{skill.name}", skill.requiredMP);
+                PlayerPrefs.SetFloat($"SkillDamage_{skill.name}", skill.DMG);
+            }
+            // <
+            // > cutscene
+            switch (cutscene)
+            {
+                case Cutscene.S01_01:
+
+                    PlayerPrefs.SetString("CurrentCutscene", "S01_01");
+
+                    break;
+
+                case Cutscene.S01_02:
+
+                    PlayerPrefs.SetString("CurrentCutscene", "S01_02");
+
+                    break;
+
+                default:
+                    break;
+
+            }
+            // <
+
+            // Debug.Log("Lunge: " + playerData.skills[0].isSelected);
+            // Debug.Log("Quake: " + playerData.skills[1].isSelected);
+            playerData = newData;
+            Debug.Log("Lunge: " + playerData.skills[0].isSelected);
+            Debug.Log("Quake: " + playerData.skills[1].isSelected);
+        }
+        else if (cType == CharType.Rin)
+        {
 
         }
-        // <
-        // > stats
-        PlayerPrefs.SetInt("Player_HP", stats.HP);
-        PlayerPrefs.SetInt("Player_MP", stats.MP);
-        PlayerPrefs.SetFloat("Player_ATK", stats.ATK);
-        PlayerPrefs.SetFloat("Player_DEF", stats.DEF);
-        // <
-        // > skills
-        foreach (Skill skill in skills)
-        {
-            PlayerPrefs.SetInt($"SkillAccess_{skill.name}", skill.isAccessible ? 1 : 0);
-            PlayerPrefs.SetInt($"MPCost_{skill.name}", skill.requiredMP);
-            PlayerPrefs.SetFloat($"SkillDamage_{skill.name}", skill.DMG);
-        }
-        // <
-        // > cutscene
-        switch (cutscene)
-        {
-            case Cutscene.S01_01:
-
-                PlayerPrefs.SetString("CurrentCutscene", "S01_01");
-
-                break;
-
-            case Cutscene.S01_02:
-
-                PlayerPrefs.SetString("CurrentCutscene", "S01_02");
-
-                break;
-
-            default:
-                break;
-
-        }
-        // <
-
-        // Debug.Log("Lunge: " + playerData.skills[0].isSelected);
-        // Debug.Log("Quake: " + playerData.skills[1].isSelected);
-        playerData = newPlayerData;
-        Debug.Log("Lunge: " + playerData.skills[0].isSelected);
-        Debug.Log("Quake: " + playerData.skills[1].isSelected);
 
 
         if (saveToFile)
@@ -140,6 +158,54 @@ public class DataManager : MonoBehaviour
 
     void LoadNextLevel ()
     {
+
+    }
+
+    Stats LoadStats(CharType cType)
+    {
+
+        int health;
+        int magic;
+        float attack;
+        float defense;
+
+        switch (cType)
+        {
+            case CharType.Player:
+
+                health = PlayerPrefs.HasKey("Player_HP") ? PlayerPrefs.GetInt("Player_HP") : 100;
+                magic = PlayerPrefs.HasKey("Player_MP") ? PlayerPrefs.GetInt("Player_MP") : 100;
+                attack = PlayerPrefs.HasKey("Player_ATK") ? PlayerPrefs.GetFloat("Player_ATK") : 1.5f;
+                defense = PlayerPrefs.HasKey("Player_DEF") ? PlayerPrefs.GetFloat("Player_DEF") : 1;
+
+                loadedStats = new Stats(health, magic, attack, defense);
+
+                return loadedStats;
+
+            case CharType.Skeleton:
+
+                chapterName = SceneManager.GetActiveScene().name;
+
+                if (chapterName == "ZerxisGraveyard")
+                {
+                    health = 3;
+                    attack = 1.0f;
+                    defense = 1.0f;
+
+                    loadedStats = new Stats(health, attack, defense);
+                }
+                else if (chapterName == "MagusForest")
+                {
+
+                }
+                
+
+                return loadedStats;
+
+
+            default:
+                return null;
+        }
 
     }
 
@@ -184,32 +250,6 @@ public class DataManager : MonoBehaviour
             default:
                 return Checkpoint.Start;
         }
-    }
-
-    Stats LoadStats (CharType cType)
-    {
-        int health;
-        int magic;
-        float attack;
-        float defense;
-
-        switch (cType)
-        {
-            case CharType.Player:
-
-                health = PlayerPrefs.HasKey("Player_HP") ? PlayerPrefs.GetInt("Player_HP") : 100;
-                magic = PlayerPrefs.HasKey("Player_MP") ? PlayerPrefs.GetInt("Player_MP") : 100;
-                attack = PlayerPrefs.HasKey("Player_ATK") ? PlayerPrefs.GetFloat("Player_ATK") : 1;
-                defense = PlayerPrefs.HasKey("Player_DEF") ? PlayerPrefs.GetFloat("Player_DEF") : 1;
-
-                Stats loadedStats = new Stats(health, magic, attack, defense);
-
-                return loadedStats;
-
-            default:
-                return new Stats();
-        }
-
     }
 
     Skill LoadSkill (string skillName)

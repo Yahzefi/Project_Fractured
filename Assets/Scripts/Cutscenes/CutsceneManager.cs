@@ -33,7 +33,7 @@ public class CutsceneManager : MonoBehaviour
     int sceneNum = 0;
 
     int movementStep = 0; // tied in with method update calls
-    bool isMoving = false;
+    bool isRunning = false;
 
     // Start is called before the first frame update
     void Start()
@@ -68,6 +68,8 @@ public class CutsceneManager : MonoBehaviour
 
         playerPos = player.transform.position;
 
+        Debug.Log(scene);
+
         StartCoroutine(PlayScene(scene));
 
     }
@@ -78,7 +80,7 @@ public class CutsceneManager : MonoBehaviour
 
         if (dManager.sceneIsPlaying) return;
 
-        if (isMoving)
+        if (isRunning)
         {
             MoveCharacter(characterName, levelNum, sceneNum);
         }
@@ -103,20 +105,20 @@ public class CutsceneManager : MonoBehaviour
                 yield return new WaitForSeconds(0.5f);
 
                 characterName = player.name;
-                isMoving = true;
+                isRunning = true;
 
                 p_Animator.SetBool("isRunning", true);
                 yield return new WaitWhile(() => playerPos.x < 2);
                 p_Animator.SetBool("isRunning", false);
-                isMoving = false;
+                isRunning = false;
                 yield return new WaitForSeconds(0.5f);
                 playerSprite.flipX = true;
                 movementStep = 1;
-                isMoving = true;
+                isRunning = true;
                 p_Animator.SetBool("isRunning", true);
                 yield return new WaitWhile(() => playerPos.x > 0.25f);
                 p_Animator.SetBool("isRunning", false);
-                isMoving = false;
+                isRunning = false;
 
                 sceneCam.enabled = true;
                 c_Animator.enabled = true;
@@ -171,7 +173,7 @@ public class CutsceneManager : MonoBehaviour
                 yield return new WaitWhile(() => dManager.sceneIsPlaying);
 
                 playerData.cutscene = Cutscene.S01_02;
-                DataManager.Save(playerData);
+                DataManager.Save(CharType.Player, playerData);
 
                 NextStep(c_Animator); // c-7
                 yield return new WaitForSeconds(0.75f);

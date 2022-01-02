@@ -24,8 +24,9 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
 
-        if (player.isHit)
+        if (player.hasContact)
         {
+
             if (player.runPhase != PlayerRun.Idle)
             {
                 player.Stop(playerBody, player.runPhase == PlayerRun.Left ? Direction.Left : Direction.Right);
@@ -33,6 +34,11 @@ public class PlayerMovement : MonoBehaviour
 
             StartCoroutine(player.Animate(Movement.Hit));
 
+        }
+        
+        if (player.isHit)
+        {
+            Combat.Knockback(playerBody, player.knockbackDist, player.knockbackForce);
         }
 
         if (player.rightPressed)
