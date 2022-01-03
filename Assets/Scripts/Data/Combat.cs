@@ -4,20 +4,6 @@ using UnityEngine;
 
 public class Combat : MonoBehaviour
 {
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public static int CalculateDamage(float thisDEF, float otherATK)
     {
 

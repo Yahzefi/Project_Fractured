@@ -31,6 +31,7 @@ public class CutsceneManager : MonoBehaviour
 
     int levelNum = 0;
     int sceneNum = 0;
+    int sectionNum = 0;
 
     int movementStep = 0; // tied in with method update calls
     bool isRunning = false;
@@ -87,7 +88,7 @@ public class CutsceneManager : MonoBehaviour
 
     }
 
-    IEnumerator PlayScene (Cutscene scene)
+    public IEnumerator PlayScene (Cutscene scene)
     {
 
         switch (scene)
@@ -95,8 +96,9 @@ public class CutsceneManager : MonoBehaviour
 // !L1S1
             case Cutscene.S01_01:
 
-                levelNum = 1;
-                sceneNum = 1;
+                levelNum++; // 1
+                sceneNum++; // 1
+                sectionNum++; // 1
 
                 yield return new WaitForSeconds(1.0f);
                 playerSprite.flipX = true;
@@ -126,8 +128,8 @@ public class CutsceneManager : MonoBehaviour
                 c_Animator.SetBool("isScene_01", true);
                 NextStep(c_Animator); // c-1
 
-                //StartCoroutine(dManager.initScript(1, 1));
-                //yield return new WaitWhile(() => dManager.sceneIsPlaying);
+                StartCoroutine(dManager.initScript(levelNum, sceneNum, sectionNum));
+                yield return new WaitWhile(() => dManager.sceneIsPlaying);
 
                 yield return new WaitForSeconds(0.750f);
                 NextStep(c_Animator); // c-2
@@ -137,8 +139,10 @@ public class CutsceneManager : MonoBehaviour
                 NextStep(c_Animator); // c-4
                 yield return new WaitForSeconds(0.750f);
 
-                //StartCoroutine(dManager.initScript(1, 2));
-                //yield return new WaitWhile(() => dManager.sceneIsPlaying);
+                sectionNum++; // 2
+
+                StartCoroutine(dManager.initScript(levelNum, sceneNum, sectionNum));
+                yield return new WaitWhile(() => dManager.sceneIsPlaying);
 
                 yield return new WaitForSeconds(0.750f);
                 NextStep(c_Animator); // c-5
@@ -151,8 +155,10 @@ public class CutsceneManager : MonoBehaviour
                 playerSprite.flipX = false;
                 yield return new WaitForSeconds(1.5f);
 
-                //StartCoroutine(dManager.initScript(1, 3));
-                //yield return new WaitWhile(() => dManager.sceneIsPlaying);
+                sectionNum++; // 3
+
+                StartCoroutine(dManager.initScript(levelNum, sceneNum, sectionNum));
+                yield return new WaitWhile(() => dManager.sceneIsPlaying);
 
                 NextStep(e_Animator); // e-3
                 yield return new WaitForSeconds(0.517f);
@@ -161,7 +167,9 @@ public class CutsceneManager : MonoBehaviour
                 yield return new WaitForSeconds(0.75f);
                 x_Animator.enabled = false;
 
-                StartCoroutine(dManager.initScript(1, 4));
+                sectionNum++; // 4
+
+                StartCoroutine(dManager.initScript(levelNum, sceneNum, sectionNum));
                 yield return new WaitWhile(() => dManager.sceneIsPlaying);
 
                 teleportMask.SetActive(true);
@@ -169,7 +177,9 @@ public class CutsceneManager : MonoBehaviour
                 yield return new WaitForSeconds(1.25f);
                 enemy.SetActive(false);
 
-                StartCoroutine(dManager.initScript(1, 5));
+                sectionNum++; // 5
+
+                StartCoroutine(dManager.initScript(levelNum, sceneNum, sectionNum));
                 yield return new WaitWhile(() => dManager.sceneIsPlaying);
 
                 playerData.cutscene = Cutscene.S01_02;
@@ -179,19 +189,35 @@ public class CutsceneManager : MonoBehaviour
                 yield return new WaitForSeconds(0.75f);
 
                 ResetAnimator(c_Animator, sceneNum); // c-0
+                sectionNum = 0; // reset for next scene
                 c_Animator.enabled = false;
                 sceneCam.enabled = false;
 
                 break;
 // !L1S2
+            // "Thoughts to Self #1: The Loss of Strength" \\
             case Cutscene.S01_02:
 
-                levelNum = 1;
-                sceneNum = 2;
+                sceneNum++; // 2
+                sectionNum++; // 1
 
+                sceneCam.enabled = true;
+                c_Animator.enabled = true;
                 c_Animator.SetBool("isScene_02", true);
+                NextStep(c_Animator); // c-1
 
-                    break;
+                // Fade to narration dialogue
+
+                // reset everything before breaking
+
+                break;
+
+            case Cutscene.S01_03:
+
+                sceneNum++; // 3
+                sectionNum++; // 1
+
+                break;
 
             default:
                 break;

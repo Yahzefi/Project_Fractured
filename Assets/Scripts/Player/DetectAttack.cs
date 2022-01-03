@@ -38,16 +38,12 @@ public class DetectAttack : MonoBehaviour
                         Debug.Log("Hit Platform");
                         break;
                     case "Attack":
-                        /*                        Debug.Log(collider.name);
-                                                Debug.Log(collider.transform.parent.name);
-                                                Debug.Log(collider.transform.parent.tag);*/
-
-                        // if (player.hasContact) return;
 
                         if (otherCollider.transform.parent.name == "Skeleton")
                         {
                             SkeletonAI skel = otherCollider.GetComponentInParent<SkeletonAI>();
                             skel.hasContact = true;
+                            skel.atkChar = CharType.Player;
                         }
 
                         break;

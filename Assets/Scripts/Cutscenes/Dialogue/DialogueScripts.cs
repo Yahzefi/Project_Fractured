@@ -9,54 +9,56 @@ public class DialogueScripts : MonoBehaviour
     string[] messages;
 
 // !fs
-    public string[] fetchSpeakers(int levelNum, int sceneNum)
+    public string[] fetchSpeakers(int levelNum, int sceneNum, int sectionNum)
     {
 // !L1_s
         if (levelNum == 1)
         {
-            switch (sceneNum)
+            if (sceneNum == 1) // Cutscene.S01_01
             {
-                case 1:
+                switch (sectionNum)
+                {
+                    case 1:
 
-                    speakers = new string[]
-                    {
+                        speakers = new string[]
+                        {
                         "Player",
                         "Player",
                         "Player",
                         "Player",
                         "Player",
                         "???"
-                    };
+                        };
 
-                    return speakers;
+                        return speakers;
 
-                case 2:
+                    case 2:
 
-                    speakers = new string[]
-                    {
+                        speakers = new string[]
+                        {
                         "???"
-                    };
+                        };
 
-                    return speakers;
+                        return speakers;
 
-                case 3:
+                    case 3:
 
-                    speakers = new string[]
-                    {
+                        speakers = new string[]
+                        {
                         "???",
                         "Player",
                         "???",
                         "Player",
                         "???",
                         "Player"
-                    };
+                        };
 
-                    return speakers;
+                        return speakers;
 
-                case 4:
+                    case 4:
 
-                    speakers = new string[]
-                    {
+                        speakers = new string[]
+                        {
                         "Player",
                         "Player",
                         "Player",
@@ -68,46 +70,160 @@ public class DialogueScripts : MonoBehaviour
                         "???",
                         "???",
                         "Player"
-                    };
+                        };
 
-                    return speakers;
+                        return speakers;
 
-                case 5:
+                    case 5:
 
-                    speakers = new string[]
-                    {
+                        speakers = new string[]
+                        {
                         "Player",
                         "Player",
                         "Player",
                         "Player",
                         "Player",
                         "Player"
-                    };
+                        };
 
-                    return speakers;
+                        return speakers;
 
-                default:
-                    return null;
+                    default:
+                        return null;
 
+                }
             }
+            else if (sceneNum == 2)
+            {
+                switch (sectionNum)
+                {
+                    case 1:
+
+                        speakers = new string[]
+                        {
+                            "...",
+                            "...",
+                            "..."
+                        };
+
+                        return speakers;
+
+                    default:
+                        return null;
+
+                }
+            }
+            else if (sceneNum == 3)
+            {
+                switch (sectionNum)
+                {
+                    case 1:
+
+                        speakers = new string[]
+                        {
+
+                        };
+
+                        return speakers;
+
+                    case 2:
+
+                        speakers = new string[]
+                        {
+
+                        };
+
+                        return speakers;
+
+                    case 3:
+
+                        speakers = new string[]
+                        {
+
+                        };
+
+                        return speakers;
+
+                    case 4:
+
+                        speakers = new string[]
+                        {
+
+                        };
+
+                        return speakers;
+
+                    case 5:
+
+                        speakers = new string[]
+                        {
+
+                        };
+
+                        return speakers;
+
+                    case 6:
+
+                        speakers = new string[]
+                        {
+
+                        };
+
+                        return speakers;
+
+                    case 7:
+
+                        speakers = new string[]
+                        {
+
+                        };
+
+                        return speakers;
+
+                    case 8:
+
+                        speakers = new string[]
+                        {
+
+                        };
+
+                        return speakers;
+
+                    default:
+                        return null;
+
+                }
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 // !L2_s
         else if (levelNum == 2)
         {
-            switch (sceneNum)
+            if (sceneNum == 1)
             {
-                case 1:
+                switch (sectionNum)
+                {
+                    case 1:
 
-                    speakers = new string[]
-                    {
-                        ""
-                    };
+                        speakers = new string[]
+                        {
+                            ""
+                        };
 
-                    return speakers;
+                        return speakers;
 
-                default:
-                    return null;
+                    default:
+                        return null;
 
+                }
+            }
+            else
+            {
+                return null;
             }
         }
         else
@@ -118,7 +234,7 @@ public class DialogueScripts : MonoBehaviour
     }
 
 // !fm
-    public string[] fetchMessages(int levelNum, int sceneNum)
+    public string[] fetchMessages(int levelNum, int sceneNum, int sectionNum)
     {
 
         /* 
@@ -129,12 +245,15 @@ public class DialogueScripts : MonoBehaviour
 // !L1_m
         if (levelNum == 1)
         {
-            switch (sceneNum)
+    // !S1_m
+            if (sceneNum == 1)
             {
-                case 1:
+                switch (sectionNum)
+                {
+                    case 1:
 
-                    messages = new string[]
-                    {
+                        messages = new string[]
+                        {
                     // > Player
                         "...",
                         "Ah, yes...",
@@ -145,25 +264,25 @@ public class DialogueScripts : MonoBehaviour
                     // >> ???
                         "Pardon me.",
                     // <<
-                    };
+                        };
 
-                    return messages;
+                        return messages;
 
-                case 2:
+                    case 2:
 
-                    messages = new string[]
-                    {
+                        messages = new string[]
+                        {
                     // >> ???
                         "I'd hate to interrupt your sulking, but I was curious about something.",
                     // <<
-                    };
+                        };
 
-                    return messages;
+                        return messages;
 
-                case 3:
+                    case 3:
 
-                    messages = new string[]
-                    {
+                        messages = new string[]
+                        {
                     // >> ???
                         "Tell me, have you ever contemplated the weight of desire and the consequences that follow?",
                     // <<
@@ -182,14 +301,14 @@ public class DialogueScripts : MonoBehaviour
                     // > Player
                         "What are you-"
                     // <
-                    };
+                        };
 
-                    return messages;
+                        return messages;
 
-                case 4:
+                    case 4:
 
-                    messages = new string[]
-                    {
+                        messages = new string[]
+                        {
                     // > Player
                         "Y-You bastard...  What'd you just...  Wait a second, no you didn't...",
                         "I don't know how, but you took it didn't you?!  Heh...",
@@ -211,14 +330,14 @@ public class DialogueScripts : MonoBehaviour
                     // > Player
                         "You think I'll just let you-"
                     // <
-                    };
+                        };
 
-                    return messages;
+                        return messages;
 
-                case 5:
+                    case 5:
 
-                    messages = new string[]
-                    {
+                        messages = new string[]
+                        {
                     // > Player
                         "DAMMIT!!!",
                         "How did this happen..?  It's hard enough to believe he knew about the artifact, but for him to just... take it. ",
@@ -227,32 +346,92 @@ public class DialogueScripts : MonoBehaviour
                         "Heh...  Well whaddaya know!  Looks like I finally got an excuse to leave this shithole.",
                         "Let's milk some fun outta this, shall we?"
                     // <
-                    };
+                        };
 
-                    return messages;
+                        return messages;
 
-                default:
-                    return null;
+                    default:
+                        return null;
 
+                }
             }
+            else if (sceneNum == 2)
+            {
+                switch (sectionNum)
+                {
+                    case 1:
+
+                        messages = new string[]
+{
+                        // > Player (Thoughts)
+                            "I didn't want to admit it, but I'm not oblivious.  I've grown weaker...",
+                            "After all this time spent as a prideful top-class warrior has been unrightfully ripped away from me.",
+                            "Something about this isn't right, though.  I wasn't this weak before I found that damn artifact, so what gives?"
+    // <
+};
+
+                        return messages;
+
+                    default:
+                        return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 // !L2_m
         else if (levelNum == 2)
         {
-            switch (sceneNum)
+            if (sceneNum == 1)
             {
-                case 1:
+                switch (sectionNum)
+                {
+                    case 1:
 
-                    messages = new string[]
-                    {
-                        ""
-                    };
+                        messages = new string[]
+                        {
+                            ""
+                        };
 
-                    return messages;
+                        return messages;
 
-                default:
-                    return null;
+                    default:
+                        return null;
 
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+        // !L3_m
+        else if (levelNum == 3)
+        {
+            if (sceneNum == 1)
+            {
+                switch (sectionNum)
+                {
+                    case 1:
+
+                        messages = new string[]
+                        {
+                            ""
+                        };
+
+                        return messages;
+
+                    default:
+                        return null;
+
+                }
+            }
+            else
+            {
+                return null;
             }
         }
         else

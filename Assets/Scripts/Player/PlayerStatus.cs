@@ -17,32 +17,6 @@ public class PlayerStatus : MonoBehaviour
     static int magic;
     // <
 
-    // > player atk
-    // \\
-    // <
-    // > player def
-    // \\
-    // <
-    // > player level
-    // \\
-    // <
-    // > player buffs
-    // \\
-    // <
-    // > player debuffs
-    // \\
-    // <
-    // > player HUD
-
-    // >> player XP bar/number
-    // \\
-    // <<
-// >> player skill bar
-
-// <<
-
-    // <
-
     private void Start()
     {
 

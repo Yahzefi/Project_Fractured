@@ -4,15 +4,25 @@ using UnityEngine;
 
 public class SceneTrigger : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    CutsceneManager csManager;
+    Cutscene scene;
+
+    private void Start()
     {
-        
+        csManager = GameObject.Find("SceneManager").GetComponent<CutsceneManager>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter2D(Collider2D collider)
     {
-        
+        if (collider.tag == "Player")
+        {
+            scene = DataManager.cutscene;
+            csManager.PlayScene(scene);
+        }
+        else
+        {
+            Debug.LogWarning("Something is mistakenly colliding with scene trigger.");
+        }
     }
+
 }

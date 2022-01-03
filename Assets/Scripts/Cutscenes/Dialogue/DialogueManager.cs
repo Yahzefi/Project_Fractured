@@ -108,13 +108,14 @@ public class DialogueManager : MonoBehaviour
         spamGuardOn = false;
     }
 
-    public IEnumerator initScript(int levelNum, int sceneNum)
+    // change levelNum to an enum of level names?
+    public IEnumerator initScript(int levelNum, int sceneNum, int sectionNum)
     {
 
         sceneIsPlaying = true;
 
-        speakerList = scripts.fetchSpeakers(levelNum, sceneNum);
-        messageList = scripts.fetchMessages(levelNum, sceneNum);
+        speakerList = scripts.fetchSpeakers(levelNum, sceneNum, sectionNum);
+        messageList = scripts.fetchMessages(levelNum, sceneNum, sectionNum);
 
         canvas.SetActive(true);
 

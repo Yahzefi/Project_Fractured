@@ -6,11 +6,7 @@ public class SkeletonAI : MonoBehaviour
 {
     PlayerController playerScript;
     
-    Data data;
-
     [HideInInspector] public CharType atkChar;
-
-    IEnumerator Wait;
 
     GameObject player;
 
@@ -126,10 +122,14 @@ public class SkeletonAI : MonoBehaviour
         {
             Debug.Log("hit on target");
 
-            // for now I'll hard code it, but later I want the attacking character to be determined in DetectAttack by checking who the active character is
-            atkChar = CharType.Player; // temp
-
-            HP -= Combat.CalculateDamage(DEF, atkChar == CharType.Player ? DataManager.playerData.stats.ATK : 0);
+            HP -= 
+                Combat.CalculateDamage 
+                (
+                    DEF, 
+                    atkChar == CharType.Player ? DataManager.playerData.stats.ATK 
+                    : atkChar == CharType.Rin ? DataManager.rinData.stats.ATK
+                    : 0
+                );
 
             knockbackDist = playerPos.x > this.transform.position.x ? -2 : 2;
 

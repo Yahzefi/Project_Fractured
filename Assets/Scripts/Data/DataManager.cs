@@ -5,26 +5,45 @@ using UnityEngine.SceneManagement;
 
 public class DataManager : MonoBehaviour
 {
-    static Stats loadedStats;
-
-
+    // > Player Data
     public static Data playerData;
-    public static Data skeletonData;
-
     Stats playerStats;
+
+        // >> Player Skills
     Skill[] playerSkills;
-    Checkpoint cPoint;
-
-    public static Cutscene cutscene;
-    public static int levelNum;
-    public static int sceneNum;
-
     Skill Lunge;
     Skill Quake;
+        // <<
 
-    static string sceneString;
+        // >> Checkpoint Data
+    Checkpoint cPoint;
     static string cPointString;
-    static string chapterName;
+        // <<
+
+        // >> Cutscene Data
+    public static Cutscene cutscene;
+/*    public static int levelNum;
+    public static int sceneNum;*/
+    static string sceneString;
+        // <<
+
+    // <
+
+    // > Rin Data
+    public static Data rinData;
+    // < 
+
+    // > Enemy Data
+    static string chapterName; // enemy levels will change depending on current chapter
+
+        // >> Skeleton
+    public static Data skeletonData;
+        // <<
+
+    // <
+
+    static Stats loadedStats; // Reference to stats requested from load data
+
 
     void Awake()
     {
@@ -83,7 +102,7 @@ public class DataManager : MonoBehaviour
 
                     break;
 
-    // > Level 01 Checkpoint 01
+                // > Level 01 Checkpoint 01
                 case Checkpoint.L01_01:
 
                     cPointString = "c01_01";
@@ -97,12 +116,14 @@ public class DataManager : MonoBehaviour
 
             }
             // <
+
             // > stats
             PlayerPrefs.SetInt("Player_HP", stats.HP);
             PlayerPrefs.SetInt("Player_MP", stats.MP);
             PlayerPrefs.SetFloat("Player_ATK", stats.ATK);
             PlayerPrefs.SetFloat("Player_DEF", stats.DEF);
             // <
+
             // > skills
             foreach (Skill skill in skills)
             {
@@ -111,6 +132,7 @@ public class DataManager : MonoBehaviour
                 PlayerPrefs.SetFloat($"SkillDamage_{skill.name}", skill.DMG);
             }
             // <
+
             // > cutscene
             switch (cutscene)
             {

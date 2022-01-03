@@ -42,9 +42,14 @@ public enum PlayerJump
 //      CUTSCENES       \\
 public enum Cutscene
 {
+// Level One | Zerxis Graveyard
     S01_01,
     S01_02,
     S01_03,
+    S01_04,
+    S01_05,
+// Level Two | Magus Forest
+    S02_01
 }
 
 //      DATA MANAGEMENT     \\
