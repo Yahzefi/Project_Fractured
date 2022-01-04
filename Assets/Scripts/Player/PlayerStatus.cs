@@ -7,7 +7,8 @@ public class PlayerStatus : MonoBehaviour
 {
     static Data playerData;
     static Stats playerStats;
-    static Checkpoint cPoint;
+    //static Checkpoint cPoint;
+    static int[] cPoint;
 
     // > player health
     static int health;
@@ -22,7 +23,7 @@ public class PlayerStatus : MonoBehaviour
 
         playerData = DataManager.playerData;
         playerStats = playerData.stats;
-        cPoint = DataManager.playerData.cPoint;
+        cPoint = playerData.cPoint;
 
         health = playerStats.HP;
         magic = playerStats.MP;
@@ -75,8 +76,8 @@ public class PlayerStatus : MonoBehaviour
     static void Die()
     {
         Debug.Log("Player has died");
-        playerStats.HP = cPoint == Checkpoint.Start ? 100 : playerStats.HP;
-        playerStats.MP = cPoint == Checkpoint.Start ? 100 : playerStats.MP;
+        playerStats.HP = cPoint[0] == 1 && cPoint[1] == 0 ? 100 : playerStats.HP;
+        playerStats.MP = cPoint[0] == 1 && cPoint[1] == 0 ? 100 : playerStats.MP;
 
         playerData.stats = playerStats;
         playerData.cPoint = cPoint;

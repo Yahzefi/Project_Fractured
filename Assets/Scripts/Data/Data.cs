@@ -7,12 +7,12 @@ public class Data
     public Stats stats;
 
     public Skill[] skills;
-    public Checkpoint cPoint;
+    public int[] cPoint;
     public Cutscene cutscene;
 
     public CharType cType;
 
-    public Data(Stats stats, Skill[] skills, Checkpoint cPoint, Cutscene cutscene)
+    public Data(Stats stats, Skill[] skills, int[] cPoint, Cutscene cutscene)
     {
         this.stats = stats;
         this.skills = skills;

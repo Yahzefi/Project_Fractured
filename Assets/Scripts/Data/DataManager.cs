@@ -16,12 +16,13 @@ public class DataManager : MonoBehaviour
         // <<
 
         // >> Checkpoint Data
-    Checkpoint cPoint;
-    static string cPointString;
+    //Checkpoint cPoint;
+    public static int[] cPointIntArr;
+    
         // <<
 
         // >> Cutscene Data
-    public static Cutscene cutscene;
+    static Cutscene cutscene;
 /*    public static int levelNum;
     public static int sceneNum;*/
     static string sceneString;
@@ -67,10 +68,10 @@ public class DataManager : MonoBehaviour
         cutscene = LoadCutscene();
 // <
 // > CURRENT CHECKPOINT
-        cPoint = LoadCheckpoint();
+        //cPoint = LoadCheckpoint();
 // <
 // > DATA
-        playerData = new Data(playerStats, playerSkills, cPoint, cutscene);
+        playerData = new Data(playerStats, playerSkills, cPointIntArr, cutscene);
         skeletonData = new Data(LoadStats(CharType.Skeleton));
 // <
     }
@@ -80,7 +81,7 @@ public class DataManager : MonoBehaviour
 
         Stats stats = newData.stats;
 
-        Checkpoint cPoint;
+        int[] cPoint;
         Skill[] skills;
         Cutscene cutscene;
 
@@ -92,29 +93,8 @@ public class DataManager : MonoBehaviour
             Debug.Log(newData.cutscene);
 
             // > checkpoint
-            switch (cPoint)
-            {
-                case Checkpoint.Start:
-
-                    cPointString = "c0";
-
-                    PlayerPrefs.SetString("CurrentCheckpoint", cPointString);
-
-                    break;
-
-                // > Level 01 Checkpoint 01
-                case Checkpoint.L01_01:
-
-                    cPointString = "c01_01";
-
-                    PlayerPrefs.SetString("CurrentCheckpoint", cPointString);
-
-                    break;
-
-                default:
-                    break;
-
-            }
+            PlayerPrefs.SetInt("CurrentChapter", cPoint[0]);
+            PlayerPrefs.SetInt("CurrentCheckpoint", cPoint[1]);
             // <
 
             // > stats
@@ -255,23 +235,19 @@ public class DataManager : MonoBehaviour
         }
 
     }
-    Checkpoint LoadCheckpoint ()
+    int[] LoadCheckpoint ()
     {
-        cPointString = PlayerPrefs.HasKey("CurrentCheckpoint") ? PlayerPrefs.GetString("CurrentCheckpoint") : "c0";
+        int chapterNum = PlayerPrefs.HasKey("CurrentChapter") ? PlayerPrefs.GetInt("CurrentChapter") : 1;
+        int cPointNum = PlayerPrefs.HasKey("CurrentCheckpoint") ? PlayerPrefs.GetInt("CurrentCheckpoint") : 0;
 
-        switch (cPointString)
+        if (cPointNum < 0)
         {
-            case "c0":
-
-                return Checkpoint.Start;
-
-            case "c01_01":
-
-                return Checkpoint.L01_01;
-
-            default:
-                return Checkpoint.Start;
+            chapterNum++;
+            cPointNum = 0;
         }
+
+        return new int[] { chapterNum, cPointNum };
+
     }
 
     Skill LoadSkill (string skillName)

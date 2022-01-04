@@ -61,11 +61,11 @@ public enum CharType
 
 }
 
-public enum Checkpoint
+/*public enum Checkpoint
 {
     Start,
     L01_01,
-}
+}*/
 
 //      UI      \\
 public enum HUD

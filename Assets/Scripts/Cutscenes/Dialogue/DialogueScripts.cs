@@ -8,10 +8,10 @@ public class DialogueScripts : MonoBehaviour
     string[] speakers;
     string[] messages;
 
-// !fs
+// ! Speakers
     public string[] fetchSpeakers(int levelNum, int sceneNum, int sectionNum)
     {
-// !L1_s
+// ! Zerxis Graveyard
         if (levelNum == 1)
         {
             if (sceneNum == 1) // Cutscene.S01_01
@@ -93,7 +93,7 @@ public class DialogueScripts : MonoBehaviour
 
                 }
             }
-            else if (sceneNum == 2)
+            else if (sceneNum == 2) // Cutscene.S01_02
             {
                 switch (sectionNum)
                 {
@@ -113,7 +113,7 @@ public class DialogueScripts : MonoBehaviour
 
                 }
             }
-            else if (sceneNum == 3)
+            else if (sceneNum == 3) // Cutscene.S01_03
             {
                 switch (sectionNum)
                 {
@@ -193,6 +193,41 @@ public class DialogueScripts : MonoBehaviour
                         return null;
 
                 }
+
+            }
+            else if (sceneNum == 4) // // Cutscene.S01_04
+            {
+                switch (sectionNum)
+                {
+                    case 1:
+
+                        speakers = new string[]
+                        {
+                            "",
+                        };
+
+                        return speakers;
+
+                    default:
+                        return null;
+                }
+            }
+            else if (sceneNum == 5) // Cutscene.S01_05
+            {
+                switch (sectionNum)
+                {
+                    case 1:
+
+                        speakers = new string[]
+                        {
+                            "",
+                        };
+
+                        return speakers;
+
+                    default:
+                        return null;
+                }
             }
             else
             {
@@ -200,7 +235,7 @@ public class DialogueScripts : MonoBehaviour
             }
             
         }
-// !L2_s
+// ! Magus Forest
         else if (levelNum == 2)
         {
             if (sceneNum == 1)
@@ -233,7 +268,7 @@ public class DialogueScripts : MonoBehaviour
 
     }
 
-// !fm
+// ! Messages
     public string[] fetchMessages(int levelNum, int sceneNum, int sectionNum)
     {
 
@@ -242,11 +277,10 @@ public class DialogueScripts : MonoBehaviour
             [// >> && // <<] = second speaker
         */
 
-// !L1_m
+// ! Zerxis Graveyard
         if (levelNum == 1)
         {
-    // !S1_m
-            if (sceneNum == 1)
+            if (sceneNum == 1) // Cutscene.S01_01
             {
                 switch (sectionNum)
                 {
@@ -355,7 +389,7 @@ public class DialogueScripts : MonoBehaviour
 
                 }
             }
-            else if (sceneNum == 2)
+            else if (sceneNum == 2) // Cutscene.S01_02
             {
                 switch (sectionNum)
                 {
@@ -376,13 +410,67 @@ public class DialogueScripts : MonoBehaviour
                         return null;
                 }
             }
+            else if (sceneNum == 3) // Cutscene.S01_03
+            {
+                switch (sectionNum)
+                {
+                    case 1:
+
+                        messages = new string[]
+                        {
+                            "",
+                        };
+
+                        return messages;
+
+                    default:
+                        return null;
+
+                }
+            }
+            else if (sceneNum == 4) // Cutscene.S01_04
+            {
+                switch (sectionNum)
+                {
+                    case 1:
+
+                        messages = new string[]
+                        {
+                            "",
+                        };
+
+                        return messages;
+
+                    default:
+                        return null;
+
+                }
+            }
+            else if (sceneNum == 5) // Cutscene.S01_05
+            {
+                switch (sectionNum)
+                {
+                    case 1:
+
+                        messages = new string[]
+                        {
+                            "",
+                        };
+
+                        return messages;
+
+                    default:
+                        return null;
+
+                }
+            }
             else
             {
                 return null;
             }
             
         }
-// !L2_m
+// ! Magus Forest
         else if (levelNum == 2)
         {
             if (sceneNum == 1)
@@ -408,7 +496,7 @@ public class DialogueScripts : MonoBehaviour
                 return null;
             }
         }
-        // !L3_m
+        // ! Untitled Level 3
         else if (levelNum == 3)
         {
             if (sceneNum == 1)

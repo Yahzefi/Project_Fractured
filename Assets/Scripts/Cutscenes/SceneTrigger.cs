@@ -16,7 +16,7 @@ public class SceneTrigger : MonoBehaviour
     {
         if (collider.tag == "Player")
         {
-            scene = DataManager.cutscene;
+            scene = DataManager.playerData.cutscene;
             csManager.PlayScene(scene);
         }
         else
